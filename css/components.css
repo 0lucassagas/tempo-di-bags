@@ -592,28 +592,24 @@ header h1 {
     left: 0;
     width: 35px;
     height: 35px;
-    pointer-events: auto; /* <-- ¡CAMBIO! Volvemos a permitir que el cursor se vea y se mueva */
+    pointer-events: none;
     z-index: 9999;
     transition: transform 0.1s ease-out;
     filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
 }
 
-/* --- INICIO: REGLAS PARA OCULTAR PUNTEROS PERSISTENTES --- */
-*, *::before, *::after {
+/* ==========================================================================
+   ESTILOS PARA EL CURSOR PERSONALIZADO (Versión Mejorada y Accesible)
+   ========================================================================== */
+
+/* El cursor personalizado solo se activa cuando JS añade esta clase al body */
+body.custom-cursor-active,
+body.custom-cursor-active *,
+body.custom-cursor-active *::before,
+body.custom-cursor-active *::after {
     cursor: none !important;
 }
 
-/* --- Ocultar cursores específicos de navegadores --- */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    cursor: none !important;
-}
-
-input[type="range"]::-moz-range-thumb {
-    cursor: none !important;
-}
-
-/* --- FIN: REGLAS PARA OCULTAR PUNTEROS PERSISTENTES --- */
 .sparkle {
     position: absolute;
     width: 4px;

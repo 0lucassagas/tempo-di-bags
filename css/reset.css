@@ -11,7 +11,7 @@ html, body, body * {
     box-sizing: border-box;
     font-family: sans-serif;
     line-height: 1.15;
-    cursor: none !important; /* Regla súper específica y forzada */
+    
 }
 
 /* 

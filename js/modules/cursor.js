@@ -5,6 +5,8 @@
 export function initCustomCursor() {
     // Verificamos si el dispositivo tiene un cursor de precisión
     if (!window.matchMedia('(pointer: fine)').matches) return;
+    
+    document.body.classList.add('custom-cursor-active');
 
     const cursor = document.getElementById('custom-cursor');
     let mouseX = 0, mouseY = 0;
