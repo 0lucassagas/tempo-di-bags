@@ -1,0 +1,51 @@
+/* ==========================================================================
+   RESET CSS - Versión Corregida y Fuerte
+   ========================================================================== */
+/* 
+   Resetea los estilos por defecto de los navegadores para asegurar consistencia.
+   Hacemos la regla del cursor más específica para que no se pueda anular.
+*/
+html, body, body * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    line-height: 1.15;
+    cursor: none !important; /* Regla súper específica y forzada */
+}
+
+/* 
+   Restablece otros estilos por defecto que a veces interfieren.
+*/
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+}
+
+/* 
+   Aseguramos que los enlaces también se oculten.
+*/
+a, link {
+    cursor: none !important;
+}
+
+/* 
+   Reseteamos listas y tablas.
+*/
+ul, ol {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 
+   Reseteamos los campos de formulario.
+*/
+button, input, optgroup, select, textarea {
+    border: none;
+}

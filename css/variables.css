@@ -1,0 +1,30 @@
+:root {
+    /* Colores principales */
+    --bg-color: #f5f0f5; /* Un gris muy claro con un ligero matiz violeta */
+    --surface-color: #ffffff;
+    --primary-color-1: #e91e63;
+    --primary-color-2: #03a9f4;
+    --accent-color: #ffc107;
+    
+    /* Colores de texto */
+    --text-color: #333333;
+    --text-muted: #777777;
+    
+    /* Otros elementos visuales */
+    --border-color: #eeeeee;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    
+    /* Fuentes */
+    --font-family: 'Montserrat', sans-serif;
+    --heading-font: 'Poppins', sans-serif;
+    --subtitle-font: 'Playfair Display', serif;
+    
+    /* Efectos especiales */
+    --neon-pink: #ff10f0;
+    --neon-cyan: #00ffff;
+    
+    /* Transiciones y animaciones */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}

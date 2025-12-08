@@ -1,0 +1,73 @@
+/*
+  main.css - Estilos principales y media queries para responsividad.
+  - Se sigue una estrategia "mobile-first".
+  - Los estilos base están en components.css.
+  - Este archivo se encarga de ADAPTAR los estilos para pantallas más pequeñas.
+*/
+
+/* ==========================================================================
+   MEDIA QUERIES PARA RESPONSIVIDAD (Mobile-First)
+   ========================================================================== */
+
+/* --- Punto de ruptura para Tablets y Móviles --- */
+@media (max-width: 768px) {
+
+    /* --- Ajustes del Header para Móvil --- */
+    header {
+        flex-direction: column;
+        height: auto; /* El header ahora ocupa el espacio que necesita */
+        padding: 1.5rem;
+    }
+    
+    header h1 { 
+        font-size: 3.5rem; /* Un poco más grande para ser legible en móvil */
+    }
+    .header-subtitle { 
+        font-size: 1.5rem; 
+    }
+    #header-logo { 
+        width: 150px; 
+        height: 150px; 
+    }
+    .hero-banner-text p { 
+        font-size: 1.1rem; 
+    }
+    
+    /* --- Ajustes del Contenido Principal para Móvil --- */
+    main {
+        flex-direction: column; /* El contenido principal se apila verticalmente */
+        padding: 1rem 0; /* Reducimos el padding lateral */
+    }
+    
+    /* --- Ajustes de la Grilla de Productos para Móvil --- */
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Hacemos las tarjetas más pequeñas para que quepan más en pantallas chicas */
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    /* --- Ajustes del Footer para Móvil --- */
+    .footer-content {
+        flex-direction: column; /* Apilamos el contenido del footer */
+        height: auto;
+        gap: 2rem;
+    }
+    
+    .contact-placeholder, .map-container {
+        width: 100%; /* Cada sección ocupa todo el ancho */
+        max-width: none; /* Eliminamos el ancho máximo */
+    }
+
+    .map-container {
+        min-height: 250px; /* Reducimos la altura mínima del mapa */
+    }
+
+    /* --- Ajustes de la Navegación para Móvil --- */
+    .nav-wrapper {
+        flex-direction: column; /* Apilamos los botones verticalmente */
+        gap: 0.75rem; /* Espacio entre los botones apilados */
+        padding: 1rem;
+    }
+    
+    /* Las reglas para .dropdown-content y .brand-list ya están mejor definidas en css/components.css y son automáticamente responsivas. */
+}
