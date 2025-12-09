@@ -201,12 +201,12 @@ header h1 {
     position: sticky;
     top: 0;
     z-index: 102;
-
+/* Ordenardo forzoso
     /* --- Definimos el orden específico para cada elemento --- */
-    > a:nth-child(1) { order: 1; } /* Inicio */
-    > .brand-menu { order: 2; }        /* Marcas */
-    > a:nth-child(2) { order: 3; }   /* Cargar Producto */
-    > a:nth-child(3) { order: 4; }    /* Sobre Nosotros */
+/*    > a:nth-child(1) { order: 1; } /* Inicio */
+/*    > .brand-menu { order: 2; }        /* Marcas */
+/*    > a:nth-child(2) { order: 3; }   /* Cargar Producto */
+/*    > a:nth-child(3) { order: 4; }    /* Sobre Nosotros */
 }
 
 /* --- Estilos Unificados para Botones y Enlaces de Navegación --- */
@@ -584,8 +584,17 @@ header h1 {
 }
 
 /* ==========================================================================
-   ESTILOS PARA EL CURSOR PERSONALIZADO
+   ESTILOS PARA EL CURSOR PERSONALIZADO (Versión Final y Funcional)
    ========================================================================== */
+
+/* El cursor personalizado solo se activa cuando JS añade esta clase al body */
+body.custom-cursor-active,
+body.custom-cursor-active *,
+body.custom-cursor-active *::before,
+body.custom-cursor-active *::after {
+    cursor: none !important;
+}
+
 #custom-cursor {
     position: fixed;
     top: 0;
@@ -596,18 +605,14 @@ header h1 {
     z-index: 9999;
     transition: transform 0.1s ease-out;
     filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+    /* Por defecto está oculto, lo muestra la clase .custom-cursor-active */
+    opacity: 0;
+    visibility: hidden;
 }
 
-/* ==========================================================================
-   ESTILOS PARA EL CURSOR PERSONALIZADO (Versión Mejorada y Accesible)
-   ========================================================================== */
-
-/* El cursor personalizado solo se activa cuando JS añade esta clase al body */
-body.custom-cursor-active,
-body.custom-cursor-active *,
-body.custom-cursor-active *::before,
-body.custom-cursor-active *::after {
-    cursor: none !important;
+body.custom-cursor-active #custom-cursor {
+    opacity: 1;
+    visibility: visible;
 }
 
 .sparkle {
@@ -630,6 +635,8 @@ body.custom-cursor-active *::after {
         transform: scale(1.5) rotate(180deg);
     }
 }
+
+
 
 /* ==========================================================================
    ESTILOS PARA LA PÁGINA DE CARGA DE PRODUCTOS
@@ -979,3 +986,7 @@ main {
 }
 
 /* El resto de tus estilos para header, footer, etc. van aquí abajo... */
+
+
+
+
