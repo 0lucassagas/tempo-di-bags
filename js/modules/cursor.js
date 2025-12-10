@@ -28,10 +28,6 @@ export function initCustomCursor() {
     // Selector para todos los elementos interactivos sobre los que el cursor debe cambiar
     const interactiveElementsSelector = 'a, button, input, textarea, select, [role="button"], .product-card, .menu-button, .pagination-button, .brand-list li a';
 
-    // Seleccionamos los elementos <g> específicos del SVG que queremos modificar
-    const cursorBody = cursor.querySelector('svg > g > g:nth-child(1)'); // El cuerpo principal
-    const cursorFire = cursor.querySelector('svg > g > g:nth-child(2)'); // El efecto de fuego
-
     // --- LÓGICA DE MOVIMIENTO Y DETECCIÓN DE HOVER ---
     const updateCursorPosition = () => {
         cursorX += (mouseX - cursorX) * 0.5; 
@@ -66,17 +62,14 @@ export function initCustomCursor() {
         mouseStopTimer = setTimeout(() => isMouseMoving = false, 100);
 
         // --- INICIO: LÓGICA DE HOVER CORREGIDA ---
+        // e.target.closest() encuentra el elemento interactivo más cercano (o el mismo)
+        // sobre el que está el ratón. Es muy eficiente.
         const interactiveElement = e.target.closest(interactiveElementsSelector);
 
         if (interactiveElement) {
-            // Estamos sobre un elemento interactivo. Aplicamos el color dorado.
-            if (cursorBody) cursorBody.style.fill = '#FFD700';
-            if (cursorFire) cursorFire.style.fill = '#FFA500';
+            cursor.classList.add('is-hovering');
         } else {
-            // No estamos sobre un elemento interactivo. Restauramos el color original.
-            // Al establecer el estilo en '', el navegador usa el atributo 'fill' del HTML.
-            if (cursorBody) cursorBody.style.fill = '';
-            if (cursorFire) cursorFire.style.fill = '';
+            cursor.classList.remove('is-hovering');
         }
         // --- FIN: LÓGICA DE HOVER CORREGIDA ---
     });

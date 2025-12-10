@@ -1,8 +1,11 @@
-// js/modules/upload.js (Versión Final con Gestión de Marcas y Productos)
+// ==========================================================================
+// upload.js - Módulo para la carga de productos (Versión Final Corregida)
+// ==========================================================================
 
 export function initUploadPage() {
     console.log("--- DEBUG: initUploadPage se ha iniciado ---");
 
+    // --- SELECCIÓN DE ELEMENTOS DEL DOM ---
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.createElement('input');
     const imagePreviewContainer = document.getElementById('image-preview-container');
@@ -11,90 +14,81 @@ export function initUploadPage() {
     const uploadForm = document.getElementById('upload-form');
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
-    const uploadMessage = document.getElementById('upload-message');
+    const uploadWarning = document.getElementById('upload-warning');
     
-    // Elementos de marca
+    // Elementos de marca y producto
     const brandSelect = document.getElementById('brand-select');
     const newBrandInput = document.getElementById('new-brand-input');
-
-    // Elementos de producto
     const productSelect = document.getElementById('product-select');
     const newProductInput = document.getElementById('new-product-input');
 
-    // Elemento de descripción
-    const descriptionInput = document.getElementById('description-input');
+    // Elementos de descripción y detalles
+    const materialInput = document.getElementById('material-input');
+    const dimensionsInput = document.getElementById('dimensions-input');
+    const featuresInput = document.getElementById('features-input');
+    
+    const searchDetailsBtn = document.getElementById('search-details-btn');
+
+    // Elementos para los modales
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalBody = document.getElementById('modal-body');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
 
     let currentImageData = null;
 
+    // --- CONFIGURACIÓN INICIAL DEL INPUT DE ARCHIVO ---
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
 
-    // --- GESTIÓN DE MARCAS ---
+    // --- GESTIÓN DE MARCAS Y PRODUCTOS ---
+    const getItemsFromStorage = (key, defaultList) => {
+        const stored = localStorage.getItem(key);
+        return stored ? JSON.parse(stored) : defaultList;
+    };
+    const saveItemsToStorage = (key, items) => localStorage.setItem(key, JSON.stringify(items));
+    const extractUniqueItemsFromProducts = (propertyName) => {
+        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+        const uniqueItems = new Set(products.map(p => p[propertyName]).filter(Boolean));
+        return Array.from(uniqueItems);
+    };
     const getBrands = () => {
-        const storedBrands = localStorage.getItem('tempoDiBagsBrands');
-        return storedBrands ? JSON.parse(storedBrands) : ['Gucci', 'Prada', 'Nike', 'Trendy', 'Louis Vuitton', 'Adidas'];
+        const defaultBrands = ['Gucci', 'Prada', 'Nike', 'Trendy', 'Louis Vuitton', 'Adidas'];
+        const storedBrands = getItemsFromStorage('tempoDiBagsBrands', defaultBrands);
+        const productBrands = extractUniqueItemsFromProducts('brand');
+        const allBrands = [...new Set([...defaultBrands, ...storedBrands, ...productBrands])].sort();
+        saveItemsToStorage('tempoDiBagsBrands', allBrands);
+        return allBrands;
     };
-
-    const saveBrands = (brands) => {
-        localStorage.setItem('tempoDiBagsBrands', JSON.stringify(brands));
-    };
-
-    const populateBrandSelect = () => {
-        const brands = getBrands();
-        brandSelect.innerHTML = '<option value="">Seleccioná una marca</option>';
-        brands.forEach(brand => {
-            const option = document.createElement('option');
-            option.value = brand;
-            option.textContent = brand;
-            brandSelect.appendChild(option);
-        });
-    };
-
-    const addNewBrand = () => {
-        const newBrand = newBrandInput.value.trim();
-        if (newBrand && !getBrands().includes(newBrand)) {
-            const brands = getBrands();
-            brands.push(newBrand);
-            saveBrands(brands);
-            populateBrandSelect();
-            brandSelect.value = newBrand;
-            newBrandInput.value = '';
-            checkFormValidity();
-        }
-    };
-
-    // --- GESTIÓN DE TIPOS DE PRODUCTO (NUEVO) ---
     const getProductTypes = () => {
-        const storedProducts = localStorage.getItem('tempoDiBagsProductTypes');
-        return storedProducts ? JSON.parse(storedProducts) : ['Bolso', 'Mochila', 'Cinturón', 'Cartera', 'Valija', 'Gorra', 'Botella de Agua'];
+        const defaultTypes = ['Bolso', 'Mochila', 'Cinturón', 'Cartera', 'Valija', 'Gorra', 'Botella de Agua'];
+        const storedTypes = getItemsFromStorage('tempoDiBagsProductTypes', defaultTypes);
+        const productTypes = extractUniqueItemsFromProducts('name');
+        const allTypes = [...new Set([...defaultTypes, ...storedTypes, ...productTypes])].sort();
+        saveItemsToStorage('tempoDiBagsProductTypes', allTypes);
+        return allTypes;
     };
-
-    const saveProductTypes = (products) => {
-        localStorage.setItem('tempoDiBagsProductTypes', JSON.stringify(products));
-    };
-
-    const populateProductSelect = () => {
-        const products = getProductTypes();
-        productSelect.innerHTML = '<option value="">Seleccioná un tipo de producto</option>';
-        products.forEach(product => {
+    const populateSelect = (selectElement, items, placeholder) => {
+        selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+        items.forEach(item => {
             const option = document.createElement('option');
-            option.value = product;
-            option.textContent = product;
-            productSelect.appendChild(option);
+            option.value = item;
+            option.textContent = item;
+            selectElement.appendChild(option);
         });
     };
-
-    const addNewProduct = () => {
-        const newProduct = newProductInput.value.trim();
-        if (newProduct && !getProductTypes().includes(newProduct)) {
-            const products = getProductTypes();
-            products.push(newProduct);
-            saveProductTypes(products);
-            populateProductSelect();
-            productSelect.value = newProduct;
-            newProductInput.value = '';
-            checkFormValidity();
+    const addNewItem = (inputElement, storageKey, selectElement, placeholder) => {
+        const newItem = inputElement.value.trim();
+        if (newItem) {
+            const items = getItemsFromStorage(storageKey, []);
+            if (!items.includes(newItem)) {
+                items.push(newItem);
+                saveItemsToStorage(storageKey, items);
+                populateSelect(selectElement, items, placeholder);
+                selectElement.value = newItem;
+                inputElement.value = '';
+                checkFormValidity();
+            }
         }
     };
 
@@ -110,7 +104,6 @@ export function initUploadPage() {
         };
         reader.readAsDataURL(file);
     };
-
     const clearImagePreview = () => {
         currentImageData = null;
         imagePreview.src = '';
@@ -120,106 +113,112 @@ export function initUploadPage() {
         fileInput.value = '';
     };
 
-    // --- EVENT LISTENERS ---
-    dropZone.addEventListener('click', () => fileInput.click());
-    
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.classList.add('drag-over');
-    });
+    // --- LÓGICA DE MODALES ---
+    const showModal = (type, message) => {
+        const iconEmoji = type === 'success' ? '😊' : (type === 'error' ? '😞' : '🤔');
+        modalBody.innerHTML = `
+            <div class="modal-icon modal-icon-${type}">${iconEmoji}</div>
+            <p class="modal-message">${message}</p>
+        `;
+        modalOverlay.classList.add('show');
+    };
+    const hideModal = () => {
+        modalOverlay.classList.remove('show');
+    };
 
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('drag-over');
-    });
+    // --- LÓGICA DE VALIDACIÓN Y DUPLICADOS ---
+    const checkForDuplicates = (brand, productName) => {
+        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+        return products.some(p => 
+            p.brand.toLowerCase() === brand.toLowerCase() && 
+            p.name.toLowerCase() === productName.toLowerCase()
+        );
+    };
 
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            showImagePreview(files[0]);
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            showImagePreview(e.target.files[0]);
-        }
-    });
-
-    removeImageBtn.addEventListener('click', clearImagePreview);
-
-    // Evento para agregar nueva marca al presionar Enter
-    newBrandInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addNewBrand();
-        }
-    });
-
-    // Evento para agregar nuevo producto al presionar Enter (NUEVO)
-    newProductInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addNewProduct();
-        }
-    });
-
-    // --- LÓGICA DEL FORMULARIO ---
     const checkFormValidity = () => {
         const price = document.getElementById('price-input').value;
-        const brand = brandSelect.value;
-        const product = productSelect.value;
-        const description = descriptionInput.value.trim();
+        
+        // --- CORRECCIÓN CLAVE: Obtenemos el valor del select O del input nuevo ---
+        const brand = brandSelect.value || newBrandInput.value.trim();
+        const productName = productSelect.options[productSelect.selectedIndex].text;
 
-        if (currentImageData && price && brand && product && description) {
-            saveBtn.disabled = false;
+        // --- CORRECCIÓN CLAVE: Solo los campos principales son obligatorios ---
+        const isFormValid = currentImageData && price && brand && productName;
+        saveBtn.disabled = !isFormValid;
+
+        if (brand && productName && checkForDuplicates(brand, productName)) {
+            uploadWarning.style.display = 'block';
+            saveBtn.textContent = 'Guardar Duplicado';
         } else {
-            saveBtn.disabled = true;
+            uploadWarning.style.display = 'none';
+            saveBtn.textContent = 'Guardar Artículo';
+        }
+    };
+    
+    // --- LÓGICA DE BÚSQUEDA EXTERNA ---
+    const updateSearchButton = () => {
+        // --- CORRECCIÓN CLAVE: Obtenemos el valor del select O del input nuevo ---
+        const brand = brandSelect.value || newBrandInput.value.trim();
+        const productName = productSelect.options[productSelect.selectedIndex].text;
+        
+        if (brand && productName) {
+            searchDetailsBtn.disabled = false;
+            const searchQuery = `mercadolibre ${brand} ${productName} características`;
+            searchDetailsBtn.onclick = () => {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`, '_blank');
+                // Explicamos al usuario qué hacer
+                showModal('info', 'Se abrió una nueva pestaña con una búsqueda en Google. Buscá los detalles en el resultado y copialos manualmente en los campos de "Detalles Específicos".');
+            };
+        } else {
+            searchDetailsBtn.disabled = true;
+            searchDetailsBtn.onclick = null;
         }
     };
 
-    // Escuchamos cambios en todos los campos relevantes
-    ['price-input', 'brand-select', 'product-select', 'description-input'].forEach(id => {
+    // --- EVENT LISTENERS ---
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'); });
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); if (e.dataTransfer.files.length > 0) showImagePreview(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) showImagePreview(e.target.files[0]); });
+    removeImageBtn.addEventListener('click', clearImagePreview);
+    modalCloseBtn.addEventListener('click', hideModal);
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
+
+    newBrandInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewItem(newBrandInput, 'tempoDiBagsBrands', brandSelect, 'Seleccioná una marca'); } });
+    newProductInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewItem(newProductInput, 'tempoDiBagsProductTypes', productSelect, 'Seleccioná un tipo de producto'); } });
+
+    // Listeners para validación y actualización de UI
+    ['price-input', 'brand-select', 'product-select', 'material-input', 'dimensions-input'].forEach(id => {
         document.getElementById(id).addEventListener('input', checkFormValidity);
     });
+    newBrandInput.addEventListener('input', () => { if (newBrandInput.value.trim()) brandSelect.value = ""; checkFormValidity(); });
+    newProductInput.addEventListener('input', () => { if (newProductInput.value.trim()) productSelect.value = ""; checkFormValidity(); });
+    
+    brandSelect.addEventListener('change', () => { checkFormValidity(); updateSearchButton(); });
+    productSelect.addEventListener('change', () => { checkFormValidity(); updateSearchButton(); });
 
-    // Escuchamos cambios en los inputs de nuevos items
-    newBrandInput.addEventListener('input', () => {
-        if (newBrandInput.value.trim()) {
-            brandSelect.value = "";
-        }
-        checkFormValidity();
-    });
-
-    newProductInput.addEventListener('input', () => { // NUEVO
-        if (newProductInput.value.trim()) {
-            productSelect.value = "";
-        }
-        checkFormValidity();
-    });
-
+    // --- LÓGICA DE ENVÍO DEL FORMULARIO ---
     uploadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (newBrandInput.value.trim()) addNewItem(newBrandInput, 'tempoDiBagsBrands', brandSelect, 'Seleccioná una marca');
+        if (newProductInput.value.trim()) addNewItem(newProductInput, 'tempoDiBagsProductTypes', productSelect, 'Seleccioná un tipo de producto');
 
-        // Si hay una marca nueva en el input, la agregamos antes de guardar
-        if (newBrandInput.value.trim()) {
-            addNewBrand();
-        }
-
-        // Si hay un producto nuevo en el input, lo agregamos antes de guardar (NUEVO)
-        if (newProductInput.value.trim()) {
-            addNewProduct();
-        }
+        const productDetails = {
+            material: materialInput.value.trim(),
+            dimensions: dimensionsInput.value.trim(),
+            features: featuresInput.value.trim()
+        };
 
         const newProduct = {
             id: Date.now(),
             name: productSelect.options[productSelect.selectedIndex].text,
             brand: brandSelect.value,
             price: parseFloat(document.getElementById('price-input').value),
-            description: descriptionInput.value.trim(),
+            description: productDetails.features || 'Sin características adicionales.',
             imageUrl: currentImageData,
-            status: "available"
+            status: "available",
+            details: productDetails
         };
 
         try {
@@ -227,19 +226,12 @@ export function initUploadPage() {
             products.unshift(newProduct);
             localStorage.setItem('tempoDiBagsProducts', JSON.stringify(products));
 
-            uploadMessage.textContent = '¡Producto cargado con éxito!';
-            uploadMessage.className = 'upload-message success';
-            uploadMessage.style.display = 'block';
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
+            showModal('success', '¡Tu producto se agregó correctamente!');
+            setTimeout(() => { window.location.href = 'index.html'; }, 2500);
 
         } catch (error) {
             console.error('Error al guardar el producto:', error);
-            uploadMessage.textContent = 'Ocurrió un error. Por favor, intenta de nuevo.';
-            uploadMessage.className = 'upload-message error';
-            uploadMessage.style.display = 'block';
+            showModal('error', 'Fallo la carga del producto. Por favor, intenta de nuevo.');
         }
     });
 
@@ -247,12 +239,18 @@ export function initUploadPage() {
         if (confirm('¿Estás seguro de que quieres cancelar? Se perderán los datos no guardados.')) {
             clearImagePreview();
             uploadForm.reset();
-            uploadMessage.style.display = 'none';
+            uploadWarning.style.display = 'none';
+            hideModal();
         }
     });
 
     // --- INICIALIZACIÓN ---
-    populateBrandSelect();
-    populateProductSelect(); // NUEVO
+    populateSelect(brandSelect, getBrands(), 'Seleccioná una marca');
+    populateSelect(productSelect, getProductTypes(), 'Seleccioná un tipo de producto');
+    
+    // Llamada inicial para asegurar que el estado sea correcto
+    checkFormValidity();
+    updateSearchButton();
+
     console.log("--- DEBUG: initUploadPage ha finalizado su configuración. ---");
 }
