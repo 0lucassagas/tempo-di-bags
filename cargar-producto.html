@@ -71,99 +71,112 @@
 </div>
 
     <!-- ==========================================================================
-       INICIO: CONTENIDO PRINCIPAL (Scrollable)
-       ========================================================================== -->
-    <div class="app-container">
-        
-        <main class="upload-main">
-            <div class="upload-container">
-                <header class="upload-header">
-                    <h1>Cargar Nuevo Artículo</h1>
-                    <p>Agrega nuevos productos a tu catálogo de forma sencilla y rápida.</p>
-                </header>
+   INICIO: CONTENIDO PRINCIPAL (Scrollable)
+   ========================================================================== -->
+<div class="app-container">
+    
+    <main class="upload-main">
+        <div class="upload-container">
+            <header class="upload-header">
+                <h1>Cargar Nuevo Artículo</h1>
+                <p>Agrega nuevos productos a tu catálogo de forma sencilla y rápida.</p>
+            </header>
 
-                <!-- PASO 1: Cargar la Imagen -->
-                <section class="upload-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h2>Imagen del Artículo</h2>
-                        <p>Arrastra y suelta una foto aquí o haz clic para seleccionar una.</p>
-                        
-                        <div id="drop-zone" role="button" tabindex="0" aria-label="Zona para arrastrar y soltar imágenes">
-                            <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17,8 12,3 7,8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                            <p class="drop-zone-text">Arrastrá y soltá la foto acá</p>
-                        </div>
-                        
-                        <!-- Aquí se mostrará la vista previa de la imagen -->
-                        <div id="image-preview-container" class="image-preview-container" style="display: none;">
-                            <img id="image-preview" src="" alt="Vista previa del artículo">
-                            <button type="button" id="remove-image-btn" class="remove-image-btn" title="Quitar imagen">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
+            <!-- PASO 1: Cargar la Imagen -->
+            <section class="upload-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h2>Imagen del Artículo</h2>
+                    <p>Arrastra y suelta una foto aquí o haz clic para seleccionar una.</p>
+                    
+                    <div id="drop-zone" role="button" tabindex="0" aria-label="Zona para arrastrar y soltar imágenes">
+                        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17,8 12,3 7,8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="drop-zone-text">Arrastrá y soltá la foto acá</p>
                     </div>
-                </section>
+                    
+                    <!-- Aquí se mostrará la vista previa de la imagen -->
+                    <div id="image-preview-container" class="image-preview-container" style="display: none;">
+                        <img id="image-preview" src="" alt="Vista previa del artículo">
+                        <button type="button" id="remove-image-btn" class="remove-image-btn" title="Quitar imagen">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-                <!-- PASO 2: Completar los Detalles -->
-                <section class="upload-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h2>Detalles del Artículo</h2>
-                        <p>Completa la información para que sea fácil de encontrar.</p>
-                        
-                        <form id="upload-form">
-                            <div class="form-group">
-                                <label for="price-input">Precio</label>
-                                <div class="input-wrapper">
-                                    <span class="input-prefix">$</span>
-                                    <input type="number" id="price-input" placeholder="15.000" required aria-required="true">
-                                </div>
+            <!-- PASO 2: Completar los Detalles -->
+            <section class="upload-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h2>Detalles del Artículo</h2>
+                    <p>Completa la información para que sea fácil de encontrar.</p>
+                    
+                    <form id="upload-form">
+                        <div class="form-group">
+                            <label for="price-input">Precio</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="price-input" placeholder="15.000" required aria-required="true">
                             </div>
-                            <div class="form-group">
-                                <label for="brand-select">Marca</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="brand-select">Marca</label>
+                            <div class="brand-input-group">
                                 <select id="brand-select" required aria-required="true">
                                     <option value="">Seleccioná una marca</option>
                                     <!-- Las marcas se inyectarán aquí por JS -->
                                 </select>
+                                <input type="text" id="new-brand-input" class="new-brand-input" placeholder="O agregá una nueva marca">
                             </div>
-                            <div class="form-group">
-                                <label for="product-select">Producto</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product-select">Producto</label>
+                            <div class="product-input-group">
                                 <select id="product-select" required aria-required="true">
                                     <option value="">Seleccioná un tipo de producto</option>
                                     <!-- Los productos se inyectarán aquí por JS -->
                                 </select>
+                                <input type="text" id="new-product-input" class="new-product-input" placeholder="O agregá un nuevo tipo de producto">
                             </div>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- PASO 3: Confirmar y Guardar -->
-                <section class="upload-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h2>Confirmar y Guardar</h2>
-                        <p>Revisá que todo esté correcto y agregá el artículo al catálogo.</p>
-                        
-                        <div class="button-group">
-                            <button type="button" id="cancel-btn">Cancelar</button>
-                            <button type="submit" id="save-btn" form="upload-form" disabled>Guardar Artículo</button>
                         </div>
+
+                        <div class="form-group">
+                            <label for="description-input">Descripción</label>
+                            <textarea id="description-input" rows="4" placeholder="Agregá detalles, materiales, palabras clave para la búsqueda..."></textarea>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- PASO 3: Confirmar y Guardar -->
+            <section class="upload-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h2>Confirmar y Guardar</h2>
+                    <p>Revisá que todo esté correcto y agregá el artículo al catálogo.</p>
+                    
+                    <div class="button-group">
+                        <button type="button" id="cancel-btn" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" id="save-btn" form="upload-form" class="btn btn-primary" disabled>Guardar Artículo</button>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- Contenedor para mensajes de estado (éxito/error) -->
-                <div id="upload-message" class="upload-message" role="alert"></div>
-            </div>
-        </main>
+            <!-- Contenedor para mensajes de estado (éxito/error) -->
+            <div id="upload-message" class="upload-message" role="alert"></div>
+        </div>
+    </main>
 
-    </div> <!-- FIN DEL APP-CONTAINER -->
+</div> <!-- FIN DEL APP-CONTAINER -->
 
     <!-- ==========================================================================
        INICIO: FOOTER - Pie de Página (compartido con index)

@@ -23,25 +23,24 @@ export function initCatalog() {
 
     // --- FUNCIÓN PARA RENDERIZAR LOS PRODUCTOS Y LA PAGINACIÓN ---
     const renderProducts = () => {
-        // Calculamos los productos de la página actual
-        const startIndex = (currentPage - 1) * productsPerPage;
-        const endIndex = startIndex + productsPerPage;
-        const paginatedProducts = allProducts.slice(startIndex, endIndex);
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const paginatedProducts = allProducts.slice(startIndex, endIndex);
 
-        // Generamos el HTML de las tarjetas de productos
-        const productsHTML = paginatedProducts.map(product => `
-            <div class="product-card ${product.status === 'sold-out' ? 'sold-out' : ''}" data-id="${product.id}">
-                <div class="product-card-image-container">
-                    <img src="${product.imageUrl}" alt="${product.name}" class="product-card-image">
-                    ${product.status === 'sold-out' ? '<span class="sold-out-label">Agotado</span>' : ''}
-                </div>
-                <div class="product-card-info">
-                    <h3 class="product-card-title">${product.name}</h3>
-                    <p class="product-card-brand">${product.brand}</p>
-                    <p class="product-card-price">$${product.price.toFixed(2)}</p>
-                </div>
+    const productsHTML = paginatedProducts.map(product => `
+        <div class="product-card ${product.status === 'sold-out' ? 'sold-out' : ''}" data-id="${product.id}">
+            <div class="product-card-image-container">
+                <img src="${product.imageUrl}" alt="${product.name}" class="product-card-image">
+                ${product.status === 'sold-out' ? '<span class="sold-out-label">Agotado</span>' : ''}
             </div>
-        `).join('');
+            <div class="product-card-info">
+                <h3 class="product-card-title">${product.name}</h3>
+                <p class="product-card-brand">${product.brand}</p>
+                <p class="product-card-description">${product.description || 'Una pieza única y elegante.'}</p> <!-- <-- NUEVO CAMPO -->
+                <p class="product-card-price">$${product.price.toFixed(2)}</p>
+            </div>
+        </div>
+    `).join('');
 
         // Generamos el HTML de la paginación
         const totalPages = Math.ceil(allProducts.length / productsPerPage);

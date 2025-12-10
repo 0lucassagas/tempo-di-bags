@@ -2,41 +2,35 @@
 // main.js - Punto de Entrada y Lógica General del Sitio
 // ==========================================================================
 
-// --- IMPORTACIÓN DE MÓDULOS ---
-// Cada línea importa una función específica de un archivo en la carpeta 'modules'.
-
-// Módulo para: Inicializar el cursor personalizado y sus efectos de estela.
+// Importamos nuestros módulos especializados
 import { initCustomCursor } from './modules/cursor.js';
-
-// Módulo para: Inicializar la barra de navegación, incluyendo el menú desplegable de marcas.
 import { initNavigation } from './modules/navigation.js';
-
-// Módulo para: Cargar y mostrar el catálogo de productos, manejando la paginación.
 import { initCatalog } from './modules/catalog.js'; 
-
-// Módulo para: Inicializar la funcionalidad del formulario para cargar nuevos productos.
 import { initUploadPage } from './modules/upload.js';
 
-
-// --- INICIALIZACIÓN DE LA APLICACIÓN ---
-// Esperamos a que todo el contenido del HTML esté cargado antes de ejecutar nuestro código.
+// Esperamos a que todo el contenido de la página esté listo
 document.addEventListener('DOMContentLoaded', () => {
     
     console.log('Inicializando Tempo di Bags...');
     
-    // Llamamos a cada función importada para activar las diferentes partes de la web.
-    initCustomCursor();   // Activa el cursor personalizado.
-    initNavigation();     // Activa el menú de marcas.
-    initCatalog();       // Activa la lógica del catálogo de productos.
+    // Inicializamos módulos globales que están en todas las páginas
+    initCustomCursor();
+    initNavigation();
 
-    // Inicializamos la página de carga solo si estamos en esa página específica.
-    // Esto evita errores al intentar ejecutar código en páginas que no tienen los elementos necesarios.
+    // --- INICIO: INICIALIZACIÓN CONDICIONAL ---
+    // Solo inicializamos un módulo si el elemento clave de su página existe.
+
+    // Inicializamos el catálogo solo si estamos en index.html
+    if (document.getElementById('catalog-section')) {
+        console.log('Página de catálogo detectada. Inicializando catálogo...');
+        initCatalog();
+    }
+
+    // Inicializamos la página de carga solo si estamos en cargar-producto.html
     if (document.querySelector('.upload-main')) {
+        console.log('Página de carga detectada. Inicializando carga...');
         initUploadPage();
     }
-    
-    // Próximamente agregaremos:
-    // initGame();
     
     console.log('Aplicación lista.');
 });
