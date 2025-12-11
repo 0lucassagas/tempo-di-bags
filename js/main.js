@@ -1,34 +1,50 @@
 // ==========================================================================
-// main.js - Punto de Entrada y Lógica General del Sitio
+// main.js - Punto de Entrada Único y Lógica General del Sitio
 // ==========================================================================
 
-// Importamos nuestros módulos especializados
+// Importaciones ESTÁTICAS (se cargan siempre)
 import { initCustomCursor } from './modules/cursor.js';
 import { initNavigation } from './modules/navigation.js';
-import { initCatalog } from './modules/catalog.js'; 
-import { initUploadPage } from './modules/upload.js';
+import { initCatalog } from './modules/catalog.js';
 import { convertCurrency, formatCurrency } from './modules/currency.js';
 
 // Esperamos a que todo el contenido de la página esté listo
 document.addEventListener('DOMContentLoaded', () => {
     
     console.log('Inicializando Tempo di Bags...');
+    
+    // Inicializamos los módulos GLOBALES que se usan en todas las páginas
     initCustomCursor(); // Activa el cursor personalizado
     initNavigation();   // Activa el menú de marcas
-    initCatalog();     // Activa la lógica del catálogo de productos
+    
+    // Inicializamos el catálogo solo si estamos en la página principal
+    // (Asumimos que el catálogo solo existe en index.html)
+    if (document.querySelector('#catalog-section')) {
+        initCatalog();     // Activa la lógica del catálogo de productos
+    }
 
     // Inicializamos la página de carga solo si estamos en esa página
+    // Usamos una importación DINÁMICA para evitar errores de sintaxis en otras páginas
     if (document.querySelector('.upload-main')) {
-        initUploadPage();
+        import('./modules/upload.js')
+            .then(module => {
+                // El módulo exporta sus funciones en el objeto 'module'
+                module.initUploadPage();
+                console.log('Módulo de carga (upload.js) cargado e inicializado.');
+            })
+            .catch(error => {
+                console.error('Error al cargar el módulo de carga (upload.js):', error);
+                // Aquí podrías mostrar un mensaje al usuario de que la funcionalidad de carga no está disponible
+            });
     }
-    
-    // Inicializamos la página de sobre nosotros si estamos en esa página
+
+    // Inicializamos la página de "Sobre Nosotros" si estamos en esa página
     if (document.querySelector('.about-main')) {
-        // Podríamos tener un initAboutPage() en el futuro
         console.log('Página "Sobre Nosotros" detectada.');
+        // Aquí podríamos añadir en el futuro: initAboutPage();
     }
-    
-    // Prueba rápida del módulo de moneda (puede eliminarse luego)
+
+    // Prueba rápida del módulo de moneda (puede eliminarse en el futuro)
     convertCurrency(100, 'USD', 'ARS').then(convertedAmount => {
         console.log(`Prueba de conversión: 100 USD son ${formatCurrency(convertedAmount, 'ARS')}`);
     });

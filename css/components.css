@@ -1200,7 +1200,7 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   ESTILOS PARA EL CURSOR PERSONALIZADO (Versión Final y con Efecto Hover)
+   ESTILOS PARA EL CURSOR PERSONALIZADO
    ========================================================================== */
 
 /* El cursor personalizado solo se activa cuando JS añade esta clase al body */
@@ -1217,20 +1217,46 @@ body.custom-cursor-active *::after {
     left: 0;
     width: 35px;
     height: 35px;
-    pointer-events: none; /* <-- ¡CLAVE! Permite que los clics atraviesen el cursor */
+    pointer-events: none;
     z-index: 9999;
-    transition: transform 0.1s ease-out;
     filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+    transform-origin: top left;
 }
 
+/* --- ESTILO PARA EL ESTADO "HOVER" DORADO (Versión Simplificada y Robusta) --- */
+#custom-cursor.is-hovering .cursor-body {
+    fill: #FFD700; /* Dorado */
+    stroke: #B8860B; /* Borde dorado oscuro */
+}
+
+#custom-cursor.is-hovering .cursor-fire {
+    fill: #FFA500; /* Naranja/Dorado */
+    opacity: 1; /* Más opaco para que resalte */
+}
+
+
+/* ==========================================================================
+   ESTILOS PARA LOS DESTELLOS (SPARKLES)
+   ========================================================================== */
 .sparkle {
-    position: absolute;
+    position: fixed; /* Se posiciona respecto a la ventana del navegador */
+    pointer-events: none; /* No interfiere con otros elementos */
     width: 4px;
     height: 4px;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    animation: sparkle-animation 1s linear forwards;
+    border-radius: 50%; /* Forma de círculo */
+    animation: sparkle-animation 1s ease-out forwards; /* Usamos ease-out para un desvanecimiento suave */
+}
+
+/* --- Clase para los destellos dorados --- */
+.sparkle-gold {
+    background-color: #FFD700; /* Dorado puro */
+    box-shadow: 0 0 8px #FFD700; /* Resplandor dorado */
+}
+
+/* --- Clase para los destellos plateados --- */
+.sparkle-silver {
+    background-color: #E5E5E5; /* Plateado brillante */
+    box-shadow: 0 0 8px #C0C0C0; /* Resplandor plateado */
 }
 
 @keyframes sparkle-animation {
@@ -1242,18 +1268,4 @@ body.custom-cursor-active *::after {
         opacity: 0;
         transform: scale(1.5) rotate(180deg);
     }
-}
-
-/* --- INICIO: ESTILO PARA EL ESTADO "HOVER" DORADO --- */
-#custom-cursor.is-hovering > svg > g:first-child {
-    /* Selecciona el primer grupo <g> del SVG (el cuerpo principal del diamante) */
-    fill: #FFD700; /* Un color dorado sólido */
-    stroke: #B8860B; /* Un borde dorado oscuro para dar contraste */
-}
-
-#custom-cursor.is-hovering > svg > g:nth-child(2) {
-    /* Selecciona el segundo grupo <g> (el efecto de "fuego") */
-    fill: #FFA500; /* Un naranja/dorado para el efecto secundario */
-    opacity: 1; /* Lo hacemos más opaco para que resalte */
-}
-/* --- FIN: ESTILO PARA EL ESTADO "HOVER" DORADO --- */
+                            }
