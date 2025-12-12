@@ -21,78 +21,27 @@
 <body>
 
 <!-- ==========================================================================
-   HEADER Y NAVEGACIÓN (sin cambios)
+   INICIO: CONTENIDO PRINCIPAL (Scrollable)
    ========================================================================== -->
-<header class="main-header">
-    <div class="smoke-container">
-        <div class="smoke smoke-left"></div>
-        <div class="smoke smoke-left-2"></div>
-        <div class="smoke smoke-right"></div>
-        <div class="smoke smoke-right-2"></div>
-    </div>
-    
-    <a href="index.html">
-        <img id="header-logo" src="https://z-cdn-media.chatglm.cn/files/3bbfa97d-a75d-499a-a281-72a2f7c4d73b_logo.jpg?auth_key=1790863760-4812e8742a7a4627b887a0660dd66c77-0-028e1d72578d681598afda870811af77" alt="Tempo di Bags Logo">
-    </a>
-    
-    <div class="header-text-content">
-        <h1>Tempo di Bags</h1>
-        <p class="header-subtitle">¡Renueva tu estilo y marca tendencia!</p>
-    </div>
-</header>
-
-<div class="nav-wrapper">
-    <a href="index.html" class="nav-link-sobre-nosotros">Inicio</a>
-    <nav class="brand-menu" role="navigation" aria-label="Menú de marcas">
-        <button class="menu-button" id="menuButton" aria-haspopup="true" aria-expanded="false">Marcas</button>
-        <div class="dropdown-content" id="brandDropdown">
-            <ul class="brand-list" id="brandList"></ul>
-        </div>
-    </nav>
-    <a href="cargar-producto.html" class="nav-link-sobre-nosotros">Cargar Producto</a>
-    <a href="sobre-nosotros.html" class="nav-link-sobre-nosotros">Sobre Nosotros</a>
-</div>
-
 <div class="app-container">
+    
     <section class="hero-banner">
         <div class="hero-banner-text">
             <p>Artículos originales de marcas top, nacionales e importadas para mujeres, hombres y niños.<br>Venta a pedido hasta agotar stock.</p>
         </div>
     </section>
-    <main>
-        <section id="catalog-section" aria-live="polite"></section>
-    </main>
-</div>
 
-<footer>
-    <div class="footer-smoke-container">
-        <div class="footer-smoke footer-smoke-left"></div>
-        <div class="footer-smoke footer-smoke-right"></div>
-    </div>
-    <div class="footer-content">
-        <div class="contact-placeholder">
-            <div class="neon-bg"></div>
-            <div class="contact-content">
-                <!-- ... (SVGs y contenido del footer) ... -->
-                <p>Hacé tu pedido al<br>1133036469 o 1150971557</p>
-            </div>
-        </div>
-        <div class="map-container">
-            <div class="map-header">
-                <h3>Zonas de Entrega</h3>
-                <p>Consultá nuestras zonas de entrega</p>
-            </div>
-            <div class="map-frame">
-                <iframe src="https://www.google.com/maps/d/embed?mid=14g80qB0y5h8wAtUJpxbtBi547S3Gxr8&ehbc=2E312F" width="640" height="480"></iframe>
-            </div>
-        </div>
-    </div>
-</footer>
+    <main>
+        <section id="catalog-section" aria-live="polite">
+            <!-- Los productos y los controles de paginación se inyectarán aquí por JavaScript -->
+        </section>
+    </main>
+
+</div> <!-- FIN DEL APP-CONTAINER -->
 
 <!-- ==========================================================================
    INICIO: SCRIPTS
    ========================================================================== -->
-<!-- ¡ESTA LÍNEA ES CRÍTICA! -->
 <script type="module" src="js/main.js"></script>
     
 </body>

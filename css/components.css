@@ -1,235 +1,117 @@
 /* ==========================================================================
-   COMPONENTS.CSS - Estilos de componentes y layout principal
+   COMPONENTS.CSS - Estilos de componentes y layout principal (Versión Limpia y Sin Redundancias)
    ========================================================================== */
 
 /* ==========================================================================
-   LAYOUT PRINCIPAL CON FLEXBOX
+   1. VARIABLES Y RESET (Se usan las variables definidas en variables.css)
+   ========================================================================== */
+
+/* ==========================================================================
+   2. LAYOUT PRINCIPAL
    ========================================================================== */
 html, body {
     height: 100%;
     margin: 0;
-    overflow-x: hidden; /* Evitamos scroll horizontal */
+    overflow-x: hidden;
 }
 
 body {
     display: flex;
-    flex-direction: column; /* Apilamos header, main y footer verticalmente */
-    min-height: 100vh; /* Aseguramos que el body ocupe al menos el 100% de la altura de la ventana */
+    flex-direction: column;
+    min-height: 100vh;
     background-color: var(--bg-color);
 }
 
-/* --- Header, Main y Footer son elementos del flujo --- */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    position: relative;
-    overflow: hidden;
-    height: 160px;
-    flex-shrink: 0; /* Evita que el header se encoja */
-    padding: 1rem 2rem;
-    text-align: center;
-}
-
 main {
-    /* --- ¡LA MAGIA! Hace que el main ocupe todo el espacio disponible --- */
     flex-grow: 1;
-    
-    /* El scroll ahora lo maneja este contenedor */
     overflow-y: auto;
     background-color: var(--bg-color);
     scroll-behavior: smooth;
 }
 
-/* --- Footer --- */
-footer {
-    width: 100%;
-    min-height: 400px;
-    background-color: var(--bg-color);
-    border-top: 3px solid var(--primary-color-1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    flex-shrink: 0; /* Evita que el footer se encoja */
-    position: relative;
-    overflow: hidden;
+header, .nav-wrapper, footer {
+    flex-shrink: 0;
 }
 
 /* ==========================================================================
-   ESTILOS GENÉRICOS DEL HEADER
+   3. ENCABEZADO (HEADER)
    ========================================================================== */
-#header-logo {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+header.main-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    flex-shrink: 0;
+    padding: 1.5rem 3rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Contenedor Flexbox para el nuevo diseño del header (logo-izquierda, texto-centro, logo-derecha) --- */
+.header-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
     z-index: 10;
     position: relative;
+}
+
+.header-logo-link {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    overflow: hidden;
+}
+
+.header-logo-link #header-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     transition: transform var(--transition-medium);
     cursor: pointer;
+    margin: 0 1rem; /* Margen para separar del texto */
 }
 
-#header-logo:hover {
+.header-logo-link #header-logo:hover {
     transform: scale(1.05);
-}
-
-#header-logo::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%);
-    transform: skewX(-25deg);
-    animation: logo-shine 5s infinite;
-}
-@keyframes logo-shine {
-    0% { left: -100%; }
-    20%, 100% { left: 150%; }
 }
 
 .header-text-content {
     display: flex;
     flex-direction: column;
-    z-index: 10;
-    position: relative;
     align-items: center;
+    text-align: center;
+    flex-grow: 1;
 }
 
-header h1 {
-    margin: 0;
-    font-family: var(--heading-font);
-    font-size: 3rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-.header-subtitle {
-    margin: 0.2rem 0 0 0;
+.header-text-content h1 {
     font-family: var(--subtitle-font);
-    font-size: 1.2rem;
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
-}
-
-/* ==========================================================================
-   ESTILOS ESPECÍFICOS DEL HEADER DE INDEX.HTML (Con Humo)
-   ========================================================================== */
-header.main-header {
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-header.main-header h1 {
-    color: #E1BEE7;
-}
-
-header.main-header .header-subtitle {
-    color: #f5f5f5;
-}
-
-.smoke-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    mix-blend-mode: screen;
-}
-
-.smoke {
-    position: absolute;
-    filter: blur(70px);
-    opacity: 0.6;
-    will-change: transform, opacity;
-}
-
-.smoke-left {
-    width: 150%; height: 150%;
-    background: radial-gradient(ellipse, #E1BEE7 0%, transparent 60%);
-    top: 0%; left: 0%;
-    transform-origin: top left;
-    animation: smoke-expand-left 25s infinite ease-in-out;
-}
-.smoke-left-2 {
-    width: 120%; height: 120%;
-    background: radial-gradient(ellipse, #CE93D8 0%, transparent 70%);
-    top: 0%; left: 0%;
-    transform-origin: top left;
-    animation: smoke-expand-left 30s infinite ease-in-out;
-    animation-delay: -10s;
-}
-
-.smoke-right {
-    width: 150%; height: 150%;
-    background: radial-gradient(ellipse, #B3E5FC 0%, transparent 60%);
-    top: 0%; right: 0%;
-    transform-origin: top right;
-    animation: smoke-expand-right 22s infinite ease-in-out;
-}
-.smoke-right-2 {
-    width: 130%; height: 130%;
-    background: radial-gradient(ellipse, #81D4FA 0%, transparent 65%);
-    top: 0%; right: 0%;
-    transform-origin: top right;
-    animation: smoke-expand-right 28s infinite ease-in-out;
-    animation-delay: -7s;
-}
-
-@keyframes smoke-expand-left {
-    0% { transform: translate(-5%, -5%) scale(0.2); opacity: 0; }
-    50% { transform: translate(30%, 10%) scale(1.1); opacity: 0.6; }
-    100% { transform: translate(60%, 20%) scale(0.5); opacity: 0; }
-}
-@keyframes smoke-expand-right {
-    0% { transform: translate(5%, -5%) scale(0.2); opacity: 0; }
-    50% { transform: translate(-30%, 10%) scale(1.1); opacity: 0.6; }
-    100% { transform: translate(-60%, 20%) scale(0.5); opacity: 0; }
-}
-
-/* ==========================================================================
-   ESTILOS ESPECÍFICOS DEL HEADER DE CARGAR-PRODUCTO.HTML (Estilo Hero)
-   ========================================================================== */
-body.upload-page header {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 2.5rem 3rem;
-    height: auto;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-body.upload-page header h1 {
-    font-family: var(--subtitle-font);
-    font-size: 2.5rem;
-    font-style: italic;
-    font-weight: 600;
+    font-size: 2.2rem;
+    font-style: normal;
+    font-weight: 700;
     color: #f0f0f0;
-    text-transform: none;
+    text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow: 0 0 8px rgba(233, 30, 99, 0.4);
 }
 
-body.upload-page .header-subtitle {
-    font-size: 1.4rem;
+.header-text-content .header-subtitle {
+    font-size: 1.2rem;
     color: #e0e0e0;
     text-shadow: 0 0 6px rgba(3, 169, 244, 0.4);
 }
 
-/* Efectos de neón para el header de carga */
-body.upload-page header::before,
-body.upload-page header::after {
+/* --- Efectos de neón para el header unificado --- */
+header.main-header::before,
+header.main-header::after {
     content: '';
     position: absolute;
     top: 0;
@@ -244,28 +126,18 @@ body.upload-page header::after {
     mix-blend-mode: screen;
 }
 
-body.upload-page header::before {
+header.main-header::before {
     background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
     animation: neon-slide-left 12s infinite;
 }
 
-body.upload-page header::after {
+header.main-header::after {
     background: linear-gradient(90deg, transparent, var(--neon-pink), transparent);
     animation: neon-slide-right 15s infinite;
 }
 
-@keyframes neon-slide-left {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-@keyframes neon-slide-right {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-
 /* ==========================================================================
-   BARRA DE NAVEGACIÓN PRINCIPAL (Sticky y Reordenada)
+   4. NAVEGACIÓN PRINCIPAL
    ========================================================================== */
 .nav-wrapper {
     display: flex;
@@ -274,7 +146,6 @@ body.upload-page header::after {
     padding: 0.5rem 2rem;
     background-color: var(--primary-color-1);
     box-shadow: var(--shadow);
-    
     position: sticky;
     top: 0;
     z-index: 102;
@@ -324,7 +195,7 @@ body.upload-page header::after {
     transition: transform var(--transition-medium);
 }
 
-.menu-button.active::after { /* Clase que añade el JavaScript */
+.menu-button.active::after {
     transform: rotate(-135deg);
 }
 
@@ -336,7 +207,7 @@ body.upload-page header::after {
     background-color: #FFFFFF;
     width: 800px;
     max-width: 95vw;
-    box-shadow: 0px 8px 25px 0px rgba(0,0,0,0.15);
+    box-shadow: 0px 8px 25px 0px rgba(0, 0, 0, 0.15);
     z-index: 101;
     border-radius: 12px;
     overflow: hidden;
@@ -346,7 +217,7 @@ body.upload-page header::after {
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
-.dropdown-content.show { /* Clase que añade el JavaScript */
+.dropdown-content.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) translateX(-50%);
@@ -380,7 +251,17 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   BANNER PRINCIPAL CON EFECTO NEON
+   5. ENLACE ACTIVO EN LA NAVEGACIÓN
+   ========================================================================== */
+.nav-wrapper a.active {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   6. BANNER PRINCIPAL CON EFECTO NEON
    ========================================================================== */
 .hero-banner {
     display: flex;
@@ -400,6 +281,7 @@ body.upload-page header::after {
     content: '';
     position: absolute;
     top: 0;
+    left: 0;
     width: 200%;
     height: 100%;
     opacity: 0.4;
@@ -407,6 +289,7 @@ body.upload-page header::after {
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     will-change: transform;
+    mix-blend-mode: screen;
 }
 
 .hero-banner::before {
@@ -437,55 +320,33 @@ body.upload-page header::after {
     line-height: 1.8;
 }
 
+@keyframes neon-slide-left {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+@keyframes neon-slide-right {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
 /* ==========================================================================
-   ESTILOS PARA LA PÁGINA "SOBRE NOSOTROS"
+   7. FOOTER CON CONTACTO Y MAPA
    ========================================================================== */
-.about-main {
+footer {
+    width: 100%;
+    min-height: 400px;
+    background-color: var(--bg-color);
+    border-top: 3px solid var(--primary-color-1);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4rem 2rem;
-    flex-grow: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
 }
 
-.about-content {
-    max-width: 800px;
-    text-align: center;
-}
-
-.about-content h2 {
-    font-family: var(--heading-font);
-    font-size: 2.8rem;
-    color: var(--primary-color-1);
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-}
-
-.about-content h3 {
-    font-family: var(--subtitle-font);
-    font-size: 1.8rem;
-    font-style: italic;
-    color: var(--text-color);
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.about-content p {
-    font-family: var(--font-family);
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-}
-
-.about-content strong {
-    color: var(--primary-color-2);
-    font-weight: 600;
-}
-
-/* ==========================================================================
-   ESTILOS PARA EL FOOTER CON CONTACTO Y MAPA
-   ========================================================================== */
 .footer-smoke-container {
     position: absolute;
     top: 0;
@@ -509,6 +370,7 @@ body.upload-page header::after {
     top: 25%; left: -75%;
     animation: smoke-from-left 20s infinite ease-in-out;
 }
+
 .footer-smoke-right {
     width: 150%; height: 150%;
     background: radial-gradient(ellipse, #E1BEE7 0%, transparent 60%);
@@ -527,6 +389,7 @@ body.upload-page header::after {
     100% { transform: translateX(0); }
 }
 
+/* --- Contenedor principal con Flexbox para las 2 columnas --- */
 .footer-content {
     display: flex;
     width: 100%;
@@ -536,6 +399,7 @@ body.upload-page header::after {
     z-index: 5;
 }
 
+/* --- Columna de Contacto (más angosta) --- */
 .contact-placeholder {
     flex: 1;
     position: relative;
@@ -548,61 +412,7 @@ body.upload-page header::after {
     padding: 1rem;
 }
 
-.neon-bg {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: #0a0a0a;
-    z-index: 1;
-}
-
-.contact-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.contact-content p {
-    margin: 0;
-    font-family: var(--subtitle-font);
-    font-size: 1.4rem;
-    font-weight: 700;
-    font-style: italic;
-    color: var(--neon-cyan);
-    text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-    line-height: 1.5;
-}
-
-.whatsapp-logo {
-    width: 50px;
-    height: 50px;
-    fill: #25D366;
-    filter: drop-shadow(0 0 5px #25D366);
-    animation: pulse-logo 2s infinite;
-}
-
-@keyframes pulse-logo {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-.fashion-item {
-    position: absolute;
-    z-index: 1;
-    opacity: 0.5;
-    filter: drop-shadow(0 0 3px currentColor);
-}
-.fashion-item.wallet { top: 10px; left: 10px; width: 40px; height: 40px; stroke: var(--neon-pink); }
-.fashion-item.hat { top: 10px; right: 10px; width: 50px; height: 50px; stroke: var(--neon-cyan); }
-.fashion-item.umbrella { bottom: 10px; left: 15px; width: 35px; height: 35px; stroke: var(--primary-color-1); }
-.fashion-item.scarf { bottom: 15px; right: 10px; width: 45px; height: 45px; stroke: var(--accent-color); }
-.fashion-item.backpack { top: 50%; left: 5px; transform: translateY(-50%); width: 40px; height: 40px; stroke: var(--primary-color-2); }
-
+/* --- Columna del Mapa (más ancha) --- */
 .map-container {
     flex: 2;
     border-radius: 8px;
@@ -636,6 +446,7 @@ body.upload-page header::after {
     flex-grow: 1;
     position: relative;
     min-height: 300px;
+    overflow: hidden;
 }
 
 .map-frame iframe {
@@ -648,7 +459,7 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   ESTILOS PARA LA PÁGINA DE CARGA DE PRODUCTOS
+   8. PÁGINA DE CARGA DE PRODUCTOS
    ========================================================================== */
 .upload-main {
     display: flex;
@@ -812,7 +623,7 @@ body.upload-page header::after {
     padding: 0.9rem 1.2rem;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    font-family: var(--font-family); /* Montserrat */
+    font-family: var(--font-family);
     font-size: 1rem;
     color: var(--text-color);
     background-color: #fdfdfd;
@@ -828,7 +639,7 @@ body.upload-page header::after {
 }
 
 .form-group textarea {
-    resize: vertical; /* Permite redimensionar solo verticalmente */
+    resize: vertical;
     min-height: 100px;
 }
 
@@ -858,12 +669,14 @@ body.upload-page header::after {
     gap: 0.75rem;
 }
 
-/* --- Estilos para los botones --- */
+/* ==========================================================================
+   9. BOTONES
+   ========================================================================== */
 .btn {
     padding: 0.8rem 2rem;
     border: none;
     border-radius: 25px;
-    font-family: var(--heading-font); /* Poppins */
+    font-family: var(--heading-font);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
@@ -916,7 +729,7 @@ body.upload-page header::after {
     margin-top: 1.5rem;
     font-weight: 500;
     text-align: center;
-    display: none; /* Se muestra con JS */
+    display: none;
 }
 
 .upload-message.success {
@@ -957,7 +770,6 @@ body.upload-page header::after {
     margin-bottom: 1.5rem;
     padding: 1rem;
     background-color: #f9f9f9;
-    border-radius: 8px;
     border-left: 4px solid var(--primary-color-1);
 }
 
@@ -968,10 +780,12 @@ body.upload-page header::after {
 }
 
 .details-helper .btn {
-    white-space: nowrap; /* Evita que el texto del botón se rompa */
+    white-space: nowrap;
 }
 
-/* --- Estilos para los Modales (Pop-ups) --- */
+/* ==========================================================================
+   10. MODALES (Pop-ups)
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1045,7 +859,7 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   ESTILOS PARA LA PAGINACIÓN DEL CATÁLOGO
+   11. PAGINACIÓN DEL CATÁLOGO
    ========================================================================== */
 .pagination-container {
     display: flex;
@@ -1089,11 +903,10 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   ESTILOS PARA EL CATÁLOGO DE PRODUCTOS
+   12. CATÁLOGO DE PRODUCTOS
    ========================================================================== */
 .products-grid {
     display: grid;
-    /* Crea columnas responsivas: mínimo 250px y se adaptan al espacio */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
     padding: 2rem;
@@ -1138,13 +951,13 @@ body.upload-page header::after {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    flex-grow: 1; /* Hace que el info ocupe el espacio restante */
+    flex-grow: 1;
 }
 
 .product-card-title {
     font-family: var(--heading-font);
     font-size: 1.1rem;
-    font-weight:  600;
+    font-weight: 600;
     color: var(--text-color);
     margin: 0;
 }
@@ -1163,7 +976,6 @@ body.upload-page header::after {
     color: var(--text-muted);
     margin-top: 0.5rem;
     line-height: 1.5;
-    /* Limitamos a 2 líneas con puntos suspensivos */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -1175,11 +987,11 @@ body.upload-page header::after {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--accent-color);
-    margin-top: auto; /* Empuja el precio hacia abajo */
+    margin-top: auto;
 }
 
 /* ==========================================================================
-   ESTILOS PARA PRODUCTOS AGOTADOS
+   13. PRODUCTOS AGOTADOS
    ========================================================================== */
 .product-card.sold-out {
     opacity: 0.7;
@@ -1200,7 +1012,7 @@ body.upload-page header::after {
 }
 
 /* ==========================================================================
-   ESTILOS PARA EL CURSOR PERSONALIZADO
+   14. CURSOR PERSONALIZADO
    ========================================================================== */
 
 /* El cursor personalizado solo se activa cuando JS añade esta clase al body */
@@ -1223,40 +1035,39 @@ body.custom-cursor-active *::after {
     transform-origin: top left;
 }
 
-/* --- ESTILO PARA EL ESTADO "HOVER" DORADO (Versión Simplificada y Robusta) --- */
+/* --- INICIO: ESTILO PARA EL ESTADO "HOVER" DORADO --- */
 #custom-cursor.is-hovering .cursor-body {
-    fill: #FFD700; /* Dorado */
-    stroke: #B8860B; /* Borde dorado oscuro */
+    fill: #FFD700;
+    stroke: #B8860B;
 }
 
 #custom-cursor.is-hovering .cursor-fire {
-    fill: #FFA500; /* Naranja/Dorado */
-    opacity: 1; /* Más opaco para que resalte */
+    fill: #FFA500;
+    opacity: 1;
 }
 
-
 /* ==========================================================================
-   ESTILOS PARA LOS DESTELLOS (SPARKLES)
+   15. DESTELLOS (SPARKLES)
    ========================================================================== */
 .sparkle {
-    position: fixed; /* Se posiciona respecto a la ventana del navegador */
-    pointer-events: none; /* No interfiere con otros elementos */
+    position: fixed;
+    pointer-events: none;
     width: 4px;
     height: 4px;
-    border-radius: 50%; /* Forma de círculo */
-    animation: sparkle-animation 1s ease-out forwards; /* Usamos ease-out para un desvanecimiento suave */
+    border-radius: 50%;
+    animation: sparkle-animation 1s ease-out forwards;
 }
 
 /* --- Clase para los destellos dorados --- */
 .sparkle-gold {
-    background-color: #FFD700; /* Dorado puro */
-    box-shadow: 0 0 8px #FFD700; /* Resplandor dorado */
+    background-color: #FFD700;
+    box-shadow: 0 0 8px #FFD700;
 }
 
 /* --- Clase para los destellos plateados --- */
 .sparkle-silver {
-    background-color: #E5E5E5; /* Plateado brillante */
-    box-shadow: 0 0 8px #C0C0C0; /* Resplandor plateado */
+    background-color: #E5E5E5;
+    box-shadow: 0 0 8px #C0C0C0;
 }
 
 @keyframes sparkle-animation {
@@ -1268,4 +1079,4 @@ body.custom-cursor-active *::after {
         opacity: 0;
         transform: scale(1.5) rotate(180deg);
     }
-                            }
+}

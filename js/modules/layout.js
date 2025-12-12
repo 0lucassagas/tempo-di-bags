@@ -1,0 +1,146 @@
+// ==========================================================================
+// layout.js - Módulo para la inyección de componentes de layout comunes
+// ==========================================================================
+
+/**
+ * Inyecta el header, la navegación y el footer en la página.
+ * Esta versión inyecta el header/nav al principio y el footer al final
+ * para asegurar una estructura DOM correcta.
+ */
+export function initLayout() {
+    const body = document.body;
+
+    // Prevenimos que se inyecte más de una vez
+    if (body.querySelector('.main-header')) {
+        console.log('Layout ya inicializado. Omitiendo inyección.');
+        return;
+    }
+
+    // --- 1. Definimos las plantillas por separado ---
+    const headerAndNavTemplate = `
+        <!-- ==========================================================================
+           INICIO: HEADER - Cabecera de la Página (Diseño Simple y Unificado)
+           ========================================================================== -->
+        <header class="main-header">
+    <div class="smoke-container">
+        <div class="smoke smoke-left"></div>
+        <div class="smoke smoke-left-2"></div>
+        <div class="smoke smoke-right"></div>
+        <div class="smoke smoke-right-2"></div>
+    </div>
+    
+    <!-- NUEVO: Contenedor Flexbox para alinear los logos y el texto -->
+    <div class="header-content-wrapper">
+        <!-- Logo a la izquierda -->
+        <a href="index.html" class="header-logo-link">
+            <img id="header-logo" src="https://z-cdn-media.chatglm.cn/files/3bbfa97d-a75d-499a-a281-72a2f7c4d73b_logo.jpg?auth_key=1790863760-4812e8742a7a4627b887a0660dd66c77-0-028e1d72578d681598afda870811af77" alt="Logo de Tempo di Bags">
+        </a>
+        
+        <!-- Texto central -->
+        <div class="header-text-content">
+            <h1>Tempo di Bags</h1>
+            <p class="header-subtitle">¡Renueva tu estilo y marca tendencia!</p>
+        </div>
+
+        <!-- Logo a la derecha -->
+        <a href="index.html" class="header-logo-link">
+            <img id="header-logo" src="https://z-cdn-media.chatglm.cn/files/3bbfa97d-a75d-499a-a281-72a2f7c4d73b_logo.jpg?auth_key=1790863760-4812e8742a7a4627b887a0660dd66c77-0-028e1d72578d681598afda870811af77" alt="Logo de Tempo di Bags">
+        </a>
+    </div>
+</header>
+
+        <!-- ==========================================================================
+           INICIO: NAVEGACIÓN PRINCIPAL (Sticky - Fija al hacer scroll)
+           ========================================================================== -->
+        <div class="nav-wrapper">
+            <!-- 1. Inicio -->
+            <a href="index.html" class="nav-link-sobre-nosotros">Inicio</a>
+            
+            <!-- 2. Marcas -->
+            <nav class="brand-menu" role="navigation" aria-label="Menú de marcas">
+                <button class="menu-button" id="menuButton" aria-haspopup="true" aria-expanded="false">
+                    Marcas
+                </button>
+                <div class="dropdown-content" id="brandDropdown">
+                    <ul class="brand-list" id="brandList">
+                        <!-- Las marcas serán inyectadas aquí por JavaScript -->
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 3. Cargar Producto -->
+            <a href="cargar-producto.html" class="nav-link-sobre-nosotros">Cargar Producto</a>
+            
+            <!-- 4. Sobre Nosotros -->
+            <a href="sobre-nosotros.html" class="nav-link-sobre-nosotros">Sobre Nosotros</a>
+        </div>
+    `;
+
+    const footerTemplate = `
+        <!-- ==========================================================================
+           INICIO: FOOTER - Pie de Página (Versión definitiva)
+           ========================================================================== -->
+        <footer>
+            <div class="footer-smoke-container">
+                <div class="footer-smoke footer-smoke-left"></div>
+                <div class="footer-smoke footer-smoke-right"></div>
+            </div>
+            <div class="footer-content">
+                <!-- Sección de contacto con efecto neon -->
+                <div class="contact-placeholder">
+                    <div class="neon-bg"></div>
+                    <div class="contact-content">
+                        <!-- Íconos SVG decorativos -->
+                        <svg class="fashion-item wallet" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 12V7a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 7v5a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 12z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        <svg class="fashion-item hat" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 7 10 7 10 7-3 7-10 7-10-7-10-7-10-7-10-7-10-7-10-7-10-7z"></path><path d="M12 12v9"></path></svg>
+                        <svg class="fashion-item umbrella" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-11 8v3m-4-3h8"></path></svg>
+                        <svg class="fashion-item scarf" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M2 12s3-5 10-5 10 10 5 10 10 5 10 5-10 10-5-10-10-5z"></path><path d="M2 12h20"></path></svg>
+                        <svg class="fashion-item backpack" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="8" y1="2" x2="8" y2="17"></line><line x1="16" y1="2" x2="16" y2="17"></line></svg>
+                        
+                        <p>Hacé tu pedido al<br>1133036469 o 1150971557</p>
+                        <!-- Logo de WhatsApp -->
+                        <svg class="whatsapp-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.5-9.1-96.8-26.3l-7-4.1-72.3 19 19.3-70.5-4.5-7.3C35.8 319.1 26.4 281.3 26.4 242.2c0-108.7 88.5-197.2 197.3-197.2 52.7 0 102.3 20.5 139.5 57.8 37.3 37.3 57.8 139.5 57.8 139.5-.1 108.6-88.6 197.2-197.1 197.2zm107.9-146.9c-5.9-3-34.9-17.2-40.3-19.2-5.4-2-9.4-3-13.3 3-3.9 5.9-15.2 19.2-18.7 23.1-3.5 3.9-6.9 4.4-12.8 1.5-5.9-3-25-9.2-47.6-29.4-17.6-15.7-29.5-35.1-32.9-41-3.5-5.9-.2-9.1 2.6-12.1 2.7-2.7 5.9-7 8.9-10.5 3-3.5 4-6.4 6-10.8 2-4.4 1-8.3-.5-11.3s-13.3-32.1-18.3-43.9c-4.8-11.4-9.7-9.9-13.3-10.1-3.4-.2-7.4-.2-11.3-.2-3.9 0-10.3 1.5-15.7 7.4-5.9-20.7 20.2-20.7 49.3 0 29.1 21.2 57.2 24.2 61.2 3 3.9 41.7 63.7 101.1 89.4 14.1 6.1 25.1 9.7 33.7 12.5 14.2 4.5 27.1 3.9 37.3 2.4 11.4-1.7 34.9-14.3 39.9-28.1 5-13.8 5-25.7 3.5-28.1-1.5-2.4-5.4-3.9-11.3-6.9z"/></svg>
+                    </div>
+                </div>
+                
+                <!-- Contenedor del mapa de Google Maps -->
+                <div class="map-container">
+                    <div class="map-header">
+                        <h3>Zonas de Entrega</h3>
+                        <p>Consultá nuestras zonas de entrega</p>
+                    </div>
+                    <div class="map-frame">
+                        <iframe src="https://www.google.com/maps/d/embed?mid=14g80qB0y5h8wAtUJpxbtBi547S3Gxr8&ehbc=2E312F" width="640" height="480"></iframe>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    `;
+
+    // --- 2. Inyectamos en las posiciones correctas ---
+    body.insertAdjacentHTML('afterbegin', headerAndNavTemplate);
+    body.insertAdjacentHTML('beforeend', footerTemplate);
+
+    // Llamamos a la función para marcar el enlace activo
+    setActiveNavLink();
+
+    console.log('Layout común inyectado correctamente.');
+}
+
+/**
+ * Añade una clase 'active' al enlace de navegación que corresponde a la página actual.
+ * Lógica mejorada para manejar correctamente la página principal (index.html).
+ */
+function setActiveNavLink() {
+    // Obtenemos el nombre del archivo de la URL actual.
+    // Si la URL es '/', `split('/').pop()` devuelve '', así que usamos 'index.html' como fallback.
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-wrapper a');
+
+    navLinks.forEach(link => {
+        // Comparamos el href del enlace con la página actual.
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+}
