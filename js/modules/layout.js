@@ -86,20 +86,32 @@ export function initLayout() {
                 <div class="footer-smoke footer-smoke-right"></div>
             </div>
             <div class="footer-content">
-                <!-- Sección de contacto con efecto neon -->
                 <div class="contact-placeholder">
                     <div class="neon-bg"></div>
                     <div class="contact-content">
-                        <!-- Íconos SVG decorativos -->
-                        <svg class="fashion-item wallet" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 12V7a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 7v5a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 12z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        <svg class="fashion-item hat" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 7 10 7 10 7-3 7-10 7-10-7-10-7-10-7-10-7-10-7-10-7-10-7z"></path><path d="M12 12v9"></path></svg>
-                        <svg class="fashion-item umbrella" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-11 8v3m-4-3h8"></path></svg>
-                        <svg class="fashion-item scarf" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M2 12s3-5 10-5 10 10 5 10 10 5 10 5-10 10-5-10-10-5z"></path><path d="M2 12h20"></path></svg>
-                        <svg class="fashion-item backpack" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="8" y1="2" x2="8" y2="17"></line><line x1="16" y1="2" x2="16" y2="17"></line></svg>
+                        <div class="contact-main">
+                            <h2>Contactanos</h2>
+                            <p class="contact-subtitle">Hacé tu pedido</p>
+                            <div class="contact-phones">
+                                <a href="tel:1133036469" class="contact-link">
+                                <svg class="contact-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>                                    <span>1133036469 / 1150971557</span>
+                                </a>
+                            </div>
+                        </div>
                         
-                        <p>Hacé tu pedido al<br>1133036469 o 1150971557</p>
-                        <!-- Logo de WhatsApp -->
-                        <svg class="whatsapp-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.5-9.1-96.8-26.3l-7-4.1-72.3 19 19.3-70.5-4.5-7.3C35.8 319.1 26.4 281.3 26.4 242.2c0-108.7 88.5-197.2 197.3-197.2 52.7 0 102.3 20.5 139.5 57.8 37.3 37.3 57.8 139.5 57.8 139.5-.1 108.6-88.6 197.2-197.1 197.2zm107.9-146.9c-5.9-3-34.9-17.2-40.3-19.2-5.4-2-9.4-3-13.3 3-3.9 5.9-15.2 19.2-18.7 23.1-3.5 3.9-6.9 4.4-12.8 1.5-5.9-3-25-9.2-47.6-29.4-17.6-15.7-29.5-35.1-32.9-41-3.5-5.9-.2-9.1 2.6-12.1 2.7-2.7 5.9-7 8.9-10.5 3-3.5 4-6.4 6-10.8 2-4.4 1-8.3-.5-11.3s-13.3-32.1-18.3-43.9c-4.8-11.4-9.7-9.9-13.3-10.1-3.4-.2-7.4-.2-11.3-.2-3.9 0-10.3 1.5-15.7 7.4-5.9-20.7 20.2-20.7 49.3 0 29.1 21.2 57.2 24.2 61.2 3 3.9 41.7 63.7 101.1 89.4 14.1 6.1 25.1 9.7 33.7 12.5 14.2 4.5 27.1 3.9 37.3 2.4 11.4-1.7 34.9-14.3 39.9-28.1 5-13.8 5-25.7 3.5-28.1-1.5-2.4-5.4-3.9-11.3-6.9z"/></svg>
+                        <div class="contact-social">
+                            <p class="social-title">Seguinos en nuestras redes:</p>
+                            <div class="social-links">
+                                <a href="https://www.instagram.com/tempodibags" target="_blank" rel="noopener noreferrer" class="social-link">
+                                    <svg class="social-icon" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                                    <span>@TempoDiBags</span>
+                                </a>
+                                <a href="https://www.facebook.com/TempoDiBags" target="_blank" rel="noopener noreferrer" class="social-link">
+                                    <svg class="social-icon" viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+                                    <span>TempoDiBags</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
