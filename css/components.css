@@ -1,5 +1,5 @@
 /* ==========================================================================
-   COMPONENTS.CSS - Estilos de componentes y layout principal (Versión Limpia y Sin Redundancias)
+   COMPONENTS.CSS - Estilos de componentes y layout principal
    ========================================================================== */
 
 /* ==========================================================================
@@ -77,7 +77,7 @@ header.main-header {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     transition: transform var(--transition-medium);
     cursor: pointer;
-    margin: 0 1rem; /* Margen para separar del texto */
+    margin: 0 1rem;
 }
 
 .header-logo-link #header-logo:hover {
@@ -282,7 +282,7 @@ header.main-header::after {
     position: absolute;
     top: 0;
     left: 0;
-    width: 200%;
+    width: 100%;
     height: 100%;
     opacity: 0.4;
     filter: blur(40px);
@@ -320,17 +320,57 @@ header.main-header::after {
     line-height: 1.8;
 }
 
-@keyframes neon-slide-left {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+/* ==========================================================================
+   7. SELECTOR DE MONEDA
+   ========================================================================== */
+.currency-selector-wrapper {
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
-@keyframes neon-slide-right {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+
+.currency-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--surface-color);
+    padding: 0.5rem;
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+}
+
+.currency-label {
+    font-family: var(--subtitle-font);
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+}
+
+.currency-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: all var(--transition-medium);
+}
+
+.currency-btn:hover {
+    background-color: var(--bg-color);
+}
+
+.currency-btn.active {
+    background-color: var(--primary-color-1);
+    color: #ffffff;
 }
 
 /* ==========================================================================
-   7. FOOTER CON CONTACTO Y MAPA
+   8. FOOTER CON CONTACTO Y MAPA
    ========================================================================== */
 footer {
     width: 100%;
@@ -378,48 +418,35 @@ footer {
     animation: smoke-from-right 25s infinite ease-in-out;
 }
 
-@keyframes smoke-from-left {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(calc(50vw + 50%)); }
-    100% { transform: translateX(0); }
-}
-@keyframes smoke-from-right {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(calc(-50vw - 50%)); }
-    100% { transform: translateX(0); }
-}
-
-/* --- Contenedor principal con Flexbox para las 2 columnas --- */
 .footer-content {
     display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 2rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
     width: 100%;
-    height: 100%;
-    gap: 30px;
     position: relative;
     z-index: 5;
 }
 
-/* --- Columna de Contacto (más angosta) --- */
 .contact-placeholder {
     flex: 1;
-    position: relative;
-    /* ... otros estilos ... */
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start; /* <-- ¡Lo alineamos hacia arriba! */
-    text-align: center;
-    padding: 2rem 1rem 1rem 1rem; /* Ajustamos el padding para que no pegue arriba */
+    min-width: 300px;
 }
 
-/* --- Columna del Mapa (más ancha) --- */
 .map-container {
     flex: 2;
+    min-width: 0;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .map-header {
@@ -442,12 +469,12 @@ footer {
 }
 
 .map-frame {
-    /* flex-grow: 1;  <-- ¡Eliminamos esto para que no crezca! */
+    flex-grow: 1;
     position: relative;
-    height: 400px; /* <-- ¡Le damos una altura fija y razonable! */
     overflow: hidden;
-    border-radius: 8px; /* Añadimos esto para que se vea mejor */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Y esto también */
+    padding-top: 75%;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .map-frame iframe {
@@ -456,11 +483,103 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    border: none;
+    border: 0;
+}
+
+/* --- ESTILOS ACTUALIZADOS PARA LA SECCIÓN DE CONTACTO --- */
+.contact-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 3rem 2rem;
+    color: var(--text-color);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+}
+
+.contact-main h2 {
+    font-family: var(--heading-font);
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-color);
+}
+
+.contact-subtitle {
+    font-family: var(--subtitle-font);
+    font-size: 1.4rem;
+    font-style: italic;
+    margin: 0 0 1.5rem 0;
+    color: var(--text-muted);
+}
+
+.contact-phones .contact-link {
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all var(--transition-medium);
+}
+
+.contact-phones .contact-link:hover {
+    color: var(--primary-color-1);
+    transform: scale(1.05);
+}
+
+.contact-icon,
+.social-icon {
+    width: 32px;
+    height: 32px;
+    stroke: var(--text-color);
+    fill: none;
+    transition: all var(--transition-medium);
+}
+
+.social-icon {
+    fill: var(--text-color);
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.social-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+    text-decoration: none;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    transition: all var(--transition-medium);
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+}
+
+.social-link:hover .instagram-icon {
+    fill: #E4405F;
+}
+
+.social-link:hover .facebook-icon {
+    fill: #1877F2;
 }
 
 /* ==========================================================================
-   8. PÁGINA DE CARGA DE PRODUCTOS
+   9. PÁGINA DE CARGA DE PRODUCTOS
    ========================================================================== */
 .upload-main {
     display: flex;
@@ -671,7 +790,7 @@ footer {
 }
 
 /* ==========================================================================
-   9. BOTONES
+   10. BOTONES
    ========================================================================== */
 .btn {
     padding: 0.8rem 2rem;
@@ -785,7 +904,7 @@ footer {
 }
 
 /* ==========================================================================
-   10. MODALES (Pop-ups)
+   11. MODALES (Pop-ups)
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -860,7 +979,7 @@ footer {
 }
 
 /* ==========================================================================
-   11. PAGINACIÓN DEL CATÁLOGO
+   12. PAGINACIÓN DEL CATÁLOGO
    ========================================================================== */
 .pagination-container {
     display: flex;
@@ -904,12 +1023,12 @@ footer {
 }
 
 /* ==========================================================================
-   12. CATÁLOGO DE PRODUCTOS
+   13. CATÁLOGO DE PRODUCTOS (SIMPLIFICADO)
    ========================================================================== */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
     padding: 2rem;
 }
 
@@ -929,11 +1048,13 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+/* --- Contenedor de la imagen para que se vea al 100% --- */
 .product-card-image-container {
     width: 100%;
-    height: 200px;
+    aspect-ratio: 1 / 1; /* Proporción cuadrada */
     overflow: hidden;
     position: relative;
+    border-radius: 12px 12px 0 0;
 }
 
 .product-card-image {
@@ -955,9 +1076,10 @@ footer {
     flex-grow: 1;
 }
 
+/* --- Tipografías más grandes --- */
 .product-card-title {
     font-family: var(--heading-font);
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-color);
     margin: 0;
@@ -965,7 +1087,7 @@ footer {
 
 .product-card-brand {
     font-family: var(--subtitle-font);
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     color: var(--primary-color-1);
     font-style: italic;
     margin: 0;
@@ -973,7 +1095,7 @@ footer {
 
 .product-card-description {
     font-family: var(--font-family);
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--text-muted);
     margin-top: 0.5rem;
     line-height: 1.5;
@@ -985,14 +1107,69 @@ footer {
 
 .product-card-price {
     font-family: var(--font-family);
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--accent-color);
     margin-top: auto;
 }
 
+/* --- Contenedor de acciones del producto (estado y botón) --- */
+.product-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+/* --- Estado de Disponibilidad (NUEVO) --- */
+.product-availability-status {
+    font-family: var(--subtitle-font);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--text-muted);
+    text-transform: lowercase;
+}
+
+/* --- Botón "Agregar al Carrito" (SIN CAMBIOS) --- */
+.add-to-cart-btn {
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 5px 12px rgba(192, 41, 107, 0.3);
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.add-to-cart-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
 /* ==========================================================================
-   13. PRODUCTOS AGOTADOS
+   14. PRODUCTOS AGOTADOS
    ========================================================================== */
 .product-card.sold-out {
     opacity: 0.7;
@@ -1013,10 +1190,8 @@ footer {
 }
 
 /* ==========================================================================
-   14. CURSOR PERSONALIZADO
+   15. CURSOR PERSONALIZADO
    ========================================================================== */
-
-/* El cursor personalizado solo se activa cuando JS añade esta clase al body */
 body.custom-cursor-active,
 body.custom-cursor-active *,
 body.custom-cursor-active *::before,
@@ -1036,7 +1211,7 @@ body.custom-cursor-active *::after {
     transform-origin: top left;
 }
 
-/* --- INICIO: ESTILO PARA EL ESTADO "HOVER" DORADO --- */
+/* --- ESTILO PARA EL ESTADO "HOVER" DORADO --- */
 #custom-cursor.is-hovering .cursor-body {
     fill: #FFD700;
     stroke: #B8860B;
@@ -1048,7 +1223,7 @@ body.custom-cursor-active *::after {
 }
 
 /* ==========================================================================
-   15. DESTELLOS (SPARKLES)
+   16. DESTELLOS (SPARKLES)
    ========================================================================== */
 .sparkle {
     position: fixed;
@@ -1071,6 +1246,31 @@ body.custom-cursor-active *::after {
     box-shadow: 0 0 8px #C0C0C0;
 }
 
+/* ==========================================================================
+   17. ANIMACIONES (CONSOLIDADO Y LIMPIO)
+   ========================================================================== */
+@keyframes neon-slide-left {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes neon-slide-right {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+@keyframes smoke-from-left {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(calc(50vw + 50%)); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes smoke-from-right {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(calc(-50vw - 50%)); }
+    100% { transform: translateX(0); }
+}
+
 @keyframes sparkle-animation {
     0% {
         opacity: 1;
@@ -1079,164 +1279,5 @@ body.custom-cursor-active *::after {
     100% {
         opacity: 0;
         transform: scale(1.5) rotate(180deg);
-    }
-}
-
-/* ==========================================================================
-   ESTILOS ACTUALIZADOS PARA LA SECCIÓN DE CONTACTO (Estilo Unificado)
-   ========================================================================== */
-
-/* --- 1. Fondo y Colores (Unificados con el estilo de la web) --- */
-.contact-placeholder {
-    /* Fondo claro y elegante, similar a otras secciones de la web */
-    background-color: var(--surface-color); /* O un color claro como #f8f9fa */
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Sombra sutil */
-}
-
-/* El neon-bg lo hacemos aún más sutil o lo quitamos. Lo dejaremos muy tenue. */
-.contact-placeholder .neon-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(233, 30, 99, 0.05) 0%, transparent 70%);
-    opacity: 1; /* Lo mantenemos pero casi invisible */
-}
-
-/* --- 2. Layout y Contenido --- */
-.contact-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-    padding: 3rem 2rem; /* Más padding para aprovechar el espacio */
-    color: var(--text-color); /* Texto oscuro para legibilidad */
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    height: 100%;
-}
-
-/* --- 3. Tipografía y Tamaños (Agrandados) --- */
-.contact-main h2 {
-    font-family: var(--heading-font);
-    font-size: 2.8rem; /* ¡Más grande! */
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-color);
-}
-
-.contact-subtitle {
-    font-family: var(--subtitle-font);
-    font-size: 1.4rem; /* ¡Más grande! */
-    font-style: italic;
-    margin: 0 0 1.5rem 0;
-    color: var(--text-muted);
-}
-
-.contact-phones .contact-link {
-    font-family: var(--font-family);
-    font-size: 1.6rem; /* ¡Más grande! */
-    font-weight: 600;
-    color: var(--text-color);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem; /* Más espacio entre icono y texto */
-    transition: all var(--transition-medium);
-}
-
-.contact-phones .contact-link:hover {
-    color: var(--primary-color-1); /* Usa el color principal de la web en hover */
-    transform: scale(1.05);
-}
-
-.social-title {
-    font-family: var(--subtitle-font);
-    font-size: 1.2rem; /* ¡Más grande! */
-    margin: 0 0 1rem 0;
-    color: var(--text-muted);
-}
-
-/* --- 4. Iconos (Agrandados y con nuevo estilo) --- */
-.contact-icon,
-.social-icon {
-    width: 32px; /* ¡Más grandes! */
-    height: 32px;
-    /* El nuevo SVG usa 'stroke', así que lo definimos aquí */
-    stroke: var(--text-color); 
-    fill: none; /* Aseguramos que no tenga relleno */
-    transition: all var(--transition-medium);
-}
-
-/* Los iconos de redes siguen siendo de relleno, los ajustamos por separado */
-.social-icon {
-    fill: var(--text-color);
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem; /* Más espacio entre redes */
-}
-
-.social-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-color);
-    text-decoration: none;
-    font-family: var(--font-family);
-    font-size: 1rem;
-    transition: all var(--transition-medium);
-}
-
-.social-link:hover {
-    transform: translateY(-3px);
-}
-
-/* Efectos hover específicos para cada red */
-.social-link:hover .instagram-icon {
-    fill: #E4405F;
-}
-
-.social-link:hover .facebook-icon {
-    fill: #1877F2;
-}
-
-/* --- 5. Responsive --- */
-@media (max-width: 768px) {
-    .contact-content {
-        padding: 2.5rem 1.5rem;
-        gap: 2rem;
-    }
-
-    .contact-main h2 {
-        font-size: 2.2rem;
-    }
-
-    .contact-phones .contact-link {
-        font-size: 1.4rem;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .contact-icon,
-    .social-icon {
-        width: 28px;
-        height: 28px;
-    }
-
-    .social-links {
-        gap: 2rem;
     }
 }
