@@ -370,11 +370,10 @@ header.main-header::after {
 }
 
 /* ==========================================================================
-   8. FOOTER CON CONTACTO Y MAPA
+   8. FOOTER CON CONTACTO (IMAGEN) Y MAPA (IFRAME) - VERSIÓN LIMPIA
    ========================================================================== */
 footer {
     width: 100%;
-    min-height: 400px;
     background-color: var(--bg-color);
     border-top: 3px solid var(--primary-color-1);
     display: flex;
@@ -387,6 +386,7 @@ footer {
     overflow: hidden;
 }
 
+/* --- Efectos de humo de fondo (se mantienen para la estética premium) --- */
 .footer-smoke-container {
     position: absolute;
     top: 0;
@@ -418,10 +418,12 @@ footer {
     animation: smoke-from-right 25s infinite ease-in-out;
 }
 
+/* --- Contenedor principal con layout de dos columnas --- */
 .footer-content {
     display: flex;
     justify-content: space-between;
-    align-items: stretch;
+    /* Alinea los elementos al inicio (parte superior) */
+    align-items: flex-start; 
     gap: 2rem;
     padding: 2rem 4rem;
     max-width: 1400px;
@@ -431,14 +433,80 @@ footer {
     z-index: 5;
 }
 
+/* --- Columna de la IZQUIERDA: Contacto (CON LA NUEVA IMAGEN) --- */
 .contact-placeholder {
     flex: 1;
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
     min-width: 300px;
 }
 
+.footer-contact-image-container {
+    width: 100%;
+    max-width: 507px; /* Ajusta este valor según el diseño */
+    height: 376px; /* Ajusta este valor según la proporción de tu imagen */
+    /* --- LÍNEA ACTUALIZADA CON LA NUEVA IMAGEN --- */
+    background-image: url('https://z-cdn-media.chatglm.cn/files/ede2630b-81ba-4d63-80f3-e1f494ac5b69.png?auth_key=1865823652-507b5eec2a4f4e7d9bdb61e76d3d1d91-0-d9fdb623454bb2d9843466b812aa1551');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+
+/* Estilo base para todos los enlaces invisibles (sin cambios) */
+.contact-link {
+    position: absolute;
+    display: block;
+    /* Oculta el texto pero mantiene el enlace accesible */
+    text-indent: -9999px;
+    font-size: 0;
+    line-height: 0;
+}
+
+/* --- Posicionamiento de los enlaces (VALORES PRECISOS SEGÚN TU IMAGEN) --- */
+
+/* Teléfono 1 */
+.contact-link-phone1 {
+    top: 34%;
+    left: 14%;
+    width: 38%;
+    height: 8%;
+}
+
+/* Teléfono 2 */
+.contact-link-phone2 {
+    top: 34%;
+    left: 57%;
+    width: 36%;
+    height: 8%;
+}
+
+/* Instagram */
+.contact-link-instagram {
+    top: 66%;
+    left: 1%;
+    width: 47%;
+    height: 14%;
+}
+
+/* Facebook */
+.contact-link-facebook {
+    top: 66%;
+    left: 59%;
+    width: 39%;
+    height: 14%;
+}
+
+.contact-link-tiktok {
+    top: 86%;
+    left: 23%;
+    width: 52%;
+    height: 14%;
+}
+
+
+/* --- Columna de la DERECHA: Mapa (SIN CAMBIOS, PERFECTO COMO ESTÁ) --- */
 .map-container {
     flex: 2;
     min-width: 0;
@@ -484,98 +552,6 @@ footer {
     width: 100%;
     height: 100%;
     border: 0;
-}
-
-/* --- ESTILOS ACTUALIZADOS PARA LA SECCIÓN DE CONTACTO --- */
-.contact-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    padding: 3rem 2rem;
-    color: var(--text-color);
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    height: 100%;
-}
-
-.contact-main h2 {
-    font-family: var(--heading-font);
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-color);
-}
-
-.contact-subtitle {
-    font-family: var(--subtitle-font);
-    font-size: 1.4rem;
-    font-style: italic;
-    margin: 0 0 1.5rem 0;
-    color: var(--text-muted);
-}
-
-.contact-phones .contact-link {
-    font-family: var(--font-family);
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--text-color);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all var(--transition-medium);
-}
-
-.contact-phones .contact-link:hover {
-    color: var(--primary-color-1);
-    transform: scale(1.05);
-}
-
-.contact-icon,
-.social-icon {
-    width: 32px;
-    height: 32px;
-    stroke: var(--text-color);
-    fill: none;
-    transition: all var(--transition-medium);
-}
-
-.social-icon {
-    fill: var(--text-color);
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-}
-
-.social-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-color);
-    text-decoration: none;
-    font-family: var(--font-family);
-    font-size: 1rem;
-    transition: all var(--transition-medium);
-}
-
-.social-link:hover {
-    transform: translateY(-3px);
-}
-
-.social-link:hover .instagram-icon {
-    fill: #E4405F;
-}
-
-.social-link:hover .facebook-icon {
-    fill: #1877F2;
 }
 
 /* ==========================================================================
@@ -1268,7 +1244,7 @@ body.custom-cursor-active *::after {
 @keyframes smoke-from-right {
     0% { transform: translateX(0); }
     50% { transform: translateX(calc(-50vw - 50%)); }
-    100% { transform: translateX(0); }
+    100% { transform: transformX(0); }
 }
 
 @keyframes sparkle-animation {
