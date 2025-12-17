@@ -1,5 +1,5 @@
 // ==========================================================================
-// upload.js - Módulo para la carga de productos (Versión Final Corregida)
+// upload.js - Módulo para la carga de productos (Versión Definitiva)
 // ==========================================================================
 
 export function initUploadPage() {
@@ -40,22 +40,20 @@ export function initUploadPage() {
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
 
-    // --- GESTIÓN DE MARCAS Y PRODUCTOS ---
+    // --- GESTIÓN DE MARCAS Y PRODUCTOS (Funciones Auxiliares) ---
     const getItemsFromStorage = (key, defaultList) => {
         const stored = localStorage.getItem(key);
         return stored ? JSON.parse(stored) : defaultList;
     };
     const saveItemsToStorage = (key, items) => localStorage.setItem(key, JSON.stringify(items));
-    const extractUniqueItemsFromProducts = (propertyName) => {
-        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
-        const uniqueItems = new Set(products.map(p => p[propertyName]).filter(Boolean));
-        return Array.from(uniqueItems);
-    };
+    
     const getBrands = () => {
         const defaultBrands = ['Gucci', 'Prada', 'Nike', 'Trendy', 'Louis Vuitton', 'Adidas'];
         const storedBrands = getItemsFromStorage('tempoDiBagsBrands', defaultBrands);
-        const productBrands = extractUniqueItemsFromProducts('brand');
+        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+        const productBrands = [...new Set(products.map(p => p.brand).filter(Boolean))];
         const allBrands = [...new Set([...defaultBrands, ...storedBrands, ...productBrands])].sort();
         saveItemsToStorage('tempoDiBagsBrands', allBrands);
         return allBrands;
@@ -63,7 +61,8 @@ export function initUploadPage() {
     const getProductTypes = () => {
         const defaultTypes = ['Bolso', 'Mochila', 'Cinturón', 'Cartera', 'Valija', 'Gorra', 'Botella de Agua'];
         const storedTypes = getItemsFromStorage('tempoDiBagsProductTypes', defaultTypes);
-        const productTypes = extractUniqueItemsFromProducts('name');
+        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+        const productTypes = [...new Set(products.map(p => p.name).filter(Boolean))];
         const allTypes = [...new Set([...defaultTypes, ...storedTypes, ...productTypes])].sort();
         saveItemsToStorage('tempoDiBagsProductTypes', allTypes);
         return allTypes;
@@ -76,20 +75,6 @@ export function initUploadPage() {
             option.textContent = item;
             selectElement.appendChild(option);
         });
-    };
-    const addNewItem = (inputElement, storageKey, selectElement, placeholder) => {
-        const newItem = inputElement.value.trim();
-        if (newItem) {
-            const items = getItemsFromStorage(storageKey, []);
-            if (!items.includes(newItem)) {
-                items.push(newItem);
-                saveItemsToStorage(storageKey, items);
-                populateSelect(selectElement, items, placeholder);
-                selectElement.value = newItem;
-                inputElement.value = '';
-                checkFormValidity();
-            }
-        }
     };
 
     // --- GESTIÓN DE IMÁGENES ---
@@ -126,29 +111,48 @@ export function initUploadPage() {
         modalOverlay.classList.remove('show');
     };
 
-    // --- LÓGICA DE VALIDACIÓN Y DUPLICADOS ---
-    const checkForDuplicates = (brand, productName) => {
-        const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
-        return products.some(p => 
-            p.brand.toLowerCase() === brand.toLowerCase() && 
-            p.name.toLowerCase() === productName.toLowerCase()
-        );
+    // --- NUEVO: Función para sincronizar los atributos 'required' ---
+    const updateRequiredAttributes = () => {
+        // Si hay texto en el campo nuevo, el select ya no es obligatorio
+        if (newBrandInput.value.trim()) {
+            brandSelect.required = false;
+        } else {
+            brandSelect.required = true;
+        }
+
+        if (newProductInput.value.trim()) {
+            productSelect.required = false;
+        } else {
+            productSelect.required = true;
+        }
     };
 
+    // --- LÓGICA DE VALIDACIÓN ---
     const checkFormValidity = () => {
-        const price = document.getElementById('price-input').value;
-        
-        // --- CORRECCIÓN CLAVE: Obtenemos el valor del select O del input nuevo ---
-        const brand = brandSelect.value || newBrandInput.value.trim();
-        const productName = productSelect.options[productSelect.selectedIndex].text;
+        // Llamamos primero a la función que sincroniza los 'required'
+        updateRequiredAttributes();
 
-        // --- CORRECCIÓN CLAVE: Solo los campos principales son obligatorios ---
+        const price = document.getElementById('price-input').value;
+        const brand = brandSelect.value || newBrandInput.value.trim();
+        const productName = productSelect.value || newProductInput.value.trim();
+
         const isFormValid = currentImageData && price && brand && productName;
         saveBtn.disabled = !isFormValid;
 
-        if (brand && productName && checkForDuplicates(brand, productName)) {
-            uploadWarning.style.display = 'block';
-            saveBtn.textContent = 'Guardar Duplicado';
+        // Lógica de advertencia de duplicados
+        if (brand && productName) {
+            const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+            const isDuplicate = products.some(p => 
+                p.brand.toLowerCase() === brand.toLowerCase() && 
+                p.name.toLowerCase() === productName.toLowerCase()
+            );
+            if (isDuplicate) {
+                uploadWarning.style.display = 'block';
+                saveBtn.textContent = 'Guardar Duplicado';
+            } else {
+                uploadWarning.style.display = 'none';
+                saveBtn.textContent = 'Guardar Artículo';
+            }
         } else {
             uploadWarning.style.display = 'none';
             saveBtn.textContent = 'Guardar Artículo';
@@ -157,16 +161,14 @@ export function initUploadPage() {
     
     // --- LÓGICA DE BÚSQUEDA EXTERNA ---
     const updateSearchButton = () => {
-        // --- CORRECCIÓN CLAVE: Obtenemos el valor del select O del input nuevo ---
         const brand = brandSelect.value || newBrandInput.value.trim();
-        const productName = productSelect.options[productSelect.selectedIndex].text;
+        const productName = productSelect.value || newProductInput.value.trim();
         
         if (brand && productName) {
             searchDetailsBtn.disabled = false;
             const searchQuery = `mercadolibre ${brand} ${productName} características`;
             searchDetailsBtn.onclick = () => {
                 window.open(`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`, '_blank');
-                // Explicamos al usuario qué hacer
                 showModal('info', 'Se abrió una nueva pestaña con una búsqueda en Google. Buscá los detalles en el resultado y copialos manualmente en los campos de "Detalles Específicos".');
             };
         } else {
@@ -178,31 +180,49 @@ export function initUploadPage() {
     // --- EVENT LISTENERS ---
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
     dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); if (e.dataTransfer.files.length > 0) showImagePreview(e.dataTransfer.files[0]); });
     fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) showImagePreview(e.target.files[0]); });
     removeImageBtn.addEventListener('click', clearImagePreview);
     modalCloseBtn.addEventListener('click', hideModal);
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
 
-    newBrandInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewItem(newBrandInput, 'tempoDiBagsBrands', brandSelect, 'Seleccioná una marca'); } });
-    newProductInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addNewItem(newProductInput, 'tempoDiBagsProductTypes', productSelect, 'Seleccioná un tipo de producto'); } });
+    // --- LÓGICA DE SINCRONIZACIÓN DE CAMPOS ---
+    brandSelect.addEventListener('change', () => { newBrandInput.value = ''; checkFormValidity(); updateSearchButton(); });
+    newBrandInput.addEventListener('input', () => { brandSelect.value = ''; checkFormValidity(); updateSearchButton(); });
+    
+    productSelect.addEventListener('change', () => { newProductInput.value = ''; checkFormValidity(); updateSearchButton(); });
+    newProductInput.addEventListener('input', () => { productSelect.value = ''; checkFormValidity(); updateSearchButton(); });
 
-    // Listeners para validación y actualización de UI
-    ['price-input', 'brand-select', 'product-select', 'material-input', 'dimensions-input'].forEach(id => {
+    // Listener para los otros campos del formulario
+    ['price-input', 'material-input', 'dimensions-input', 'features-input'].forEach(id => {
         document.getElementById(id).addEventListener('input', checkFormValidity);
     });
-    newBrandInput.addEventListener('input', () => { if (newBrandInput.value.trim()) brandSelect.value = ""; checkFormValidity(); });
-    newProductInput.addEventListener('input', () => { if (newProductInput.value.trim()) productSelect.value = ""; checkFormValidity(); });
-    
-    brandSelect.addEventListener('change', () => { checkFormValidity(); updateSearchButton(); });
-    productSelect.addEventListener('change', () => { checkFormValidity(); updateSearchButton(); });
 
     // --- LÓGICA DE ENVÍO DEL FORMULARIO ---
     uploadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (newBrandInput.value.trim()) addNewItem(newBrandInput, 'tempoDiBagsBrands', brandSelect, 'Seleccioná una marca');
-        if (newProductInput.value.trim()) addNewItem(newProductInput, 'tempoDiBagsProductTypes', productSelect, 'Seleccioná un tipo de producto');
+        
+        const finalBrand = brandSelect.value || newBrandInput.value.trim();
+        const finalProductName = productSelect.value || newProductInput.value.trim();
+
+        // Si se usó una marca nueva, la guardamos en la lista
+        if (newBrandInput.value.trim()) {
+            const brands = getBrands();
+            if (!brands.includes(finalBrand)) {
+                brands.push(finalBrand);
+                saveItemsToStorage('tempoDiBagsBrands', brands);
+            }
+        }
+
+        // Si se usó un producto nuevo, lo guardamos en la lista
+        if (newProductInput.value.trim()) {
+            const productTypes = getProductTypes();
+            if (!productTypes.includes(finalProductName)) {
+                productTypes.push(finalProductName);
+                saveItemsToStorage('tempoDiBagsProductTypes', productTypes);
+            }
+        }
 
         const productDetails = {
             material: materialInput.value.trim(),
@@ -212,8 +232,8 @@ export function initUploadPage() {
 
         const newProduct = {
             id: Date.now(),
-            name: productSelect.options[productSelect.selectedIndex].text,
-            brand: brandSelect.value,
+            name: finalProductName,
+            brand: finalBrand,
             price: parseFloat(document.getElementById('price-input').value),
             description: productDetails.features || 'Sin características adicionales.',
             imageUrl: currentImageData,
@@ -225,6 +245,11 @@ export function initUploadPage() {
             let products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
             products.unshift(newProduct);
             localStorage.setItem('tempoDiBagsProducts', JSON.stringify(products));
+
+            const event = new CustomEvent('productAdded', {
+                detail: { product: newProduct }
+            });
+            document.dispatchEvent(event);
 
             showModal('success', '¡Tu producto se agregó correctamente!');
             setTimeout(() => { window.location.href = 'index.html'; }, 2500);
@@ -241,6 +266,8 @@ export function initUploadPage() {
             uploadForm.reset();
             uploadWarning.style.display = 'none';
             hideModal();
+            // Al resetear, también hay que chequear la validez para volver a poner los 'required'
+            checkFormValidity();
         }
     });
 
@@ -248,7 +275,6 @@ export function initUploadPage() {
     populateSelect(brandSelect, getBrands(), 'Seleccioná una marca');
     populateSelect(productSelect, getProductTypes(), 'Seleccioná un tipo de producto');
     
-    // Llamada inicial para asegurar que el estado sea correcto
     checkFormValidity();
     updateSearchButton();
 

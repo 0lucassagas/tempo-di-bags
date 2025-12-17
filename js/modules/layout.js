@@ -41,11 +41,7 @@ export function initLayout() {
                     <h1>Tempo di Bags</h1>
                     <p class="header-subtitle">¡Renueva tu estilo y marca tendencia!</p>
                 </div>
-
-                <!-- Logo a la derecha -->
-                <a href="index.html" class="header-logo-link">
-                    <img id="header-logo" src="https://z-cdn-media.chatglm.cn/files/3bbfa97d-a75d-499a-a281-72a2f7c4d73b_logo.jpg?auth_key=1790863760-4812e8742a7a4627b887a0660dd66c77-0-028e1d72578d681598afda870811af77" alt="Logo de Tempo di Bags">
-                </a>
+                
             </div>
         </header>
 
@@ -119,6 +115,10 @@ export function initLayout() {
 
     // Llamamos a la función para marcar el enlace activo
     setActiveNavLink();
+    
+    // --- NUEVO: Inicializamos el menú de marcas y la navegación ---
+    initBrandMenu();
+    initNavigation();
 
     console.log('Layout común inyectado correctamente.');
 }
@@ -139,4 +139,64 @@ function setActiveNavLink() {
             link.classList.add('active');
         }
     });
+}
+
+// --- NUEVO: Función para inicializar el menú de marcas ---
+function initBrandMenu() {
+    // Solo ejecutamos esta lógica si estamos en una página que tiene el menú de marcas
+    const brandList = document.getElementById('brandList');
+    if (!brandList) return;
+
+    // Obtenemos las marcas únicas desde localStorage
+    const products = JSON.parse(localStorage.getItem('tempoDiBagsProducts')) || [];
+    const brands = [...new Set(products.map(p => p.brand))].sort();
+
+    // Generamos el HTML para cada marca
+    brandList.innerHTML = '';
+    brands.forEach(brand => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#';
+        a.className = 'brand-filter-link'; // Clase para el event listener en catalog.js
+        a.dataset.brand = brand; // Atributo para identificar la marca
+        a.textContent = brand;
+        li.appendChild(a);
+        brandList.appendChild(li);
+    });
+
+    // Escuchamos el evento personalizado para actualizar el menú cuando se agrega un producto
+    document.addEventListener('productAdded', () => {
+        console.log('Evento productAdded recibido. Actualizando menú de marcas...');
+        initBrandMenu(); // Llamamos recursivamente a la función para regenerar el menú
+    });
+}
+
+// --- NUEVO: Función para inicializar la navegación del menú desplegable ---
+export function initNavigation() {
+    const menuButton = document.getElementById('menuButton');
+    const brandDropdown = document.getElementById('brandDropdown');
+    
+    if (!menuButton || !brandDropdown) return;
+
+    // Toggle del menú desplegable
+    menuButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', !isExpanded);
+        brandDropdown.classList.toggle('show');
+    });
+
+    // Cerrar el menú al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (!brandDropdown.contains(e.target) && e.target !== menuButton) {
+            brandDropdown.classList.remove('show');
+            menuButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Hacemos la función para cerrar el menú globalmente para que catalog.js pueda usarla
+    window.closeBrandDropdown = () => {
+        brandDropdown.classList.remove('show');
+        menuButton.setAttribute('aria-expanded', 'false');
+    };
 }

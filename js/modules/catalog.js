@@ -6,80 +6,222 @@ import { convertCurrency, formatCurrency } from './currency.js';
 
 /**
  * Inicializa la funcionalidad del catálogo.
- * Carga productos desde un JSON inicial o desde localStorage, los renderiza y gestiona la paginación.
  */
 export function initCatalog() {
     console.log("Inicializando módulo del catálogo...");
 
     // --- CONFIGURACIÓN Y ESTADO ---
     const LOCAL_STORAGE_KEY = 'tempoDiBagsProducts';
-    const PRODUCTS_PER_PAGE = 30; // Mostramos 30 productos por página
+    const PRODUCTS_PER_PAGE = 30;
     const INITIAL_DATA_URL = 'data/products.json';
 
-    const catalogSection = document.getElementById('catalog-section');
-    if (!catalogSection) {
-        console.error(`Error: No se encontró el contenedor del catálogo con el ID 'catalog-section'.`);
+    // Referencias a los contenedores
+    const searchBarWrapper = document.getElementById('search-bar-wrapper');
+    const productsGridWrapper = document.getElementById('products-grid-wrapper');
+    const paginationWrapper = document.getElementById('pagination-wrapper');
+
+    if (!searchBarWrapper || !productsGridWrapper || !paginationWrapper) {
+        console.error("Error: No se encontraron los contenedores necesarios para el catálogo.");
         return;
     }
 
     let currentPage = 1;
     let allProducts = [];
-    let currentCurrency = 'ARS'; // Moneda por defecto
+    let currentCurrency = 'ARS';
+    
+    // NUEVO: Separamos el término de búsqueda del término activo
+    let searchTerm = ''; // Lo que el usuario escribe en el input
+    let activeSearchTerm = ''; // El término que filtra el catálogo
+    
+    // Variable de estado para el filtro de marca
+    let activeBrandFilter = ''; // La marca que filtra el catálogo
 
     // --- FUNCIÓN PARA CARGAR DATOS INICIALES ---
-    /**
-     * Carga los productos desde el archivo JSON si localStorage está vacío.
-     * Esta función asegura que el catálogo siempre tenga datos para mostrar.
-     */
     const seedInitialData = async () => {
         try {
             console.log("LocalStorage vacío. Cargando datos iniciales desde JSON...");
             const response = await fetch(INITIAL_DATA_URL);
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const initialProducts = await response.json();
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialProducts));
-            console.log("Datos iniciales cargados en localStorage.");
             return initialProducts;
         } catch (error) {
             console.error("No se pudieron cargar los datos iniciales:", error);
-            catalogSection.innerHTML = `<p style="text-align: center; padding: 2rem; color: red;">Error al cargar los productos iniciales. Por favor, recarga la página.</p>`;
-            return []; // Devuelve un array vacío para evitar más errores
+            productsGridWrapper.innerHTML = `<p style="text-align: center; padding: 2rem; color: red;">Error al cargar los productos iniciales.</p>`;
+            return [];
         }
+    };
+
+    // --- FUNCIÓN DE FILTRADO ---
+    const filterProducts = (products, term, brand) => {
+        let filtered = products;
+
+        // Filtramos por término de búsqueda si existe
+        if (term) {
+            const lowerCaseTerm = term.toLowerCase();
+            filtered = filtered.filter(product =>
+                product.name.toLowerCase().includes(lowerCaseTerm) ||
+                product.brand.toLowerCase().includes(lowerCaseTerm)
+            );
+        }
+
+        // Filtramos por marca si existe
+        if (brand) {
+            filtered = filtered.filter(product =>
+                product.brand.toLowerCase() === brand.toLowerCase()
+            );
+        }
+
+        return filtered;
+    };
+
+    // --- FUNCIÓN PARA RENDERIZAR LA BARRA DE BÚSQUEDA (CON ICONOS) ---
+    const renderSearchBar = () => {
+        searchBarWrapper.innerHTML = `
+            <div class="search-bar-container">
+                <input type="text" class="search-input" placeholder="Buscar por nombre o marca...">
+                
+                <!-- Botón de Buscar con Icono SVG -->
+                <button class="action-button search-button has-tooltip" data-tooltip="Buscar con el término actual">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-9-9-9-9"></path>
+                        <path d="m21 21-9-9-9-9"></path>
+                    </svg>
+                    <span>Buscar</span>
+                </button>
+
+                <!-- Botón de Limpiar Filtros con Icono SVG -->
+                <button class="action-button clear-filters-btn has-tooltip" data-tooltip="Borrar todos los filtros">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 12 12 19"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span>Limpiar</span>
+                </button>
+
+                <div class="search-autocomplete-dropdown"></div>
+            </div>
+        `;
+
+        const searchInput = searchBarWrapper.querySelector('.search-input');
+        const dropdown = searchBarWrapper.querySelector('.search-autocomplete-dropdown');
+        const clearFiltersBtn = searchBarWrapper.querySelector('.clear-filters-btn');
+
+        // Event listener para el input de búsqueda
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            const filteredForAutocomplete = filterProducts(allProducts, searchTerm, activeBrandFilter);
+            renderAutocomplete(filteredForAutocomplete, dropdown);
+        });
+
+        // Listener para la tecla "Enter"
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                activeSearchTerm = searchTerm;
+                currentPage = 1;
+                renderProducts();
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Listener para el botón de limpiar filtros
+        clearFiltersBtn.addEventListener('click', () => {
+            searchTerm = '';
+            activeSearchTerm = '';
+            activeBrandFilter = '';
+            searchInput.value = '';
+            currentPage = 1;
+            
+            document.querySelectorAll('.brand-filter-link.active').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            renderProducts();
+        });
+
+        // Ocultar autocompletado al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!searchBarWrapper.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    };
+
+    // --- FUNCIÓN PARA RENDERIZAR AUTOCOMPLETADO ---
+    const renderAutocomplete = (products, dropdownElement) => {
+        dropdownElement.innerHTML = '';
+        if (products.length === 0 || searchTerm === '') {
+            dropdownElement.style.display = 'none';
+            return;
+        }
+        const maxResultsToShow = 4;
+        const limitedProducts = products.slice(0, maxResultsToShow);
+
+        limitedProducts.forEach(product => {
+            const item = document.createElement('div');
+            item.classList.add('autocomplete-item');
+
+            // --- CORRECCIÓN CLAVE: Manejo robusto de imágenes para el autocompletado ---
+            let imageUrl;
+            if (product.imageUrl) {
+                if (product.imageUrl.startsWith('data:image')) {
+                    // Si es una URL de datos completa
+                    imageUrl = product.imageUrl;
+                } else if (product.imageUrl.startsWith('http')) {
+                    // Si es una URL externa
+                    imageUrl = product.imageUrl;
+                } else {
+                    // Si es una ruta relativa (ej: "data/img/...")
+                    imageUrl = product.imageUrl;
+                }
+            } else {
+                // Imagen por defecto si no hay ninguna
+                imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRUVFIi8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNDQ0IyLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdIMTIuMDFNMjEgMTJIMjEuMDFNNCAxMkg0LjAxTDEyIDZDNy4wMjkgNiAzIDkuMDI5IDMgMTRTNy4wMjkgMjIgMTIgMjJDMTIuMDAxIDIyIDEyLjAyMSAyMiAxMi4wMzEgMjJDMTIuMDQxIDIyIDEyLjA1MSAyMiAxMi4wNjEgMjJDMTYuOTcxIDIyIDIwIDE4Ljk3MSAyMCAxNFMxNi45NzEgNiAxMiA2WiIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+';
+            }
+
+            item.innerHTML = `
+                <img src="${imageUrl}" alt="${product.name}" class="autocomplete-item-image">
+                <div class="autocomplete-item-info">
+                    <span class="autocomplete-item-name">${product.name}</span>
+                    <span class="autocomplete-item-brand">${product.brand}</span>
+                </div>
+            `;
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                const searchInput = searchBarWrapper.querySelector('.search-input');
+                searchInput.value = product.name;
+                searchTerm = product.name;
+                activeSearchTerm = product.name;
+                currentPage = 1;
+                renderProducts();
+                dropdownElement.style.display = 'none';
+            });
+            dropdownElement.appendChild(item);
+        });
+        dropdownElement.style.display = 'block';
     };
 
     // --- FUNCIÓN PRINCIPAL: OBTENER Y MOSTRAR PRODUCTOS ---
-    /**
-     * Obtiene los productos desde localStorage (o desde el JSON inicial) e inicia el renderizado.
-     */
     const fetchProducts = async () => {
-        try {
-            const productsFromStorage = localStorage.getItem(LOCAL_STORAGE_KEY);
-            
-            // Si no hay productos en localStorage, los cargamos desde el JSON.
-            allProducts = productsFromStorage ? JSON.parse(productsFromStorage) : await seedInitialData();
-            
-            if (allProducts.length === 0) {
-                catalogSection.innerHTML = `<p style="text-align: center; padding: 2rem; color: #666;">No hay productos para mostrar. ¡Carga el primero!</p>`;
-                return;
-            }
-
-            // Si hay productos, renderizamos la primera página.
-            renderProducts();
-        } catch (error) {
-            console.error("Error al procesar los productos desde localStorage:", error);
-            catalogSection.innerHTML = `<p style="text-align: center; padding: 2rem; color: red;">Hubo un error al cargar el catálogo.</p>`;
+        const productsFromStorage = localStorage.getItem(LOCAL_STORAGE_KEY);
+        allProducts = productsFromStorage ? JSON.parse(productsFromStorage) : await seedInitialData();
+        if (allProducts.length === 0) {
+            productsGridWrapper.innerHTML = `<p style="text-align: center; padding: 2rem; color: #666;">No hay productos para mostrar.</p>`;
+            return;
         }
+        
+        // NUEVO: Ordenar los productos del más nuevo al más antiguo
+        allProducts.sort((a, b) => b.id - a.id);
+
+        renderSearchBar();
+        renderProducts();
     };
 
     // --- LÓGICA DE PAGINACIÓN ---
-    /**
-     * Cambia la página actual y vuelve a renderizar los productos.
-     * @param {number} page - El número de página al que se quiere cambiar.
-     */
     const changePage = (page) => {
-        const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
+        const filteredProducts = filterProducts(allProducts, activeSearchTerm, activeBrandFilter);
+        const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
         if (page < 1 || page > totalPages) return;
         
         currentPage = page;
@@ -87,18 +229,14 @@ export function initCatalog() {
     };
 
     // --- RENDERIZADO DEL DOM ---
-    /**
-     * Renderiza la cuadrícula de productos y los controles de paginación
-     * para la página actual. Esta función es asíncrona porque convierte monedas.
-     */
     const renderProducts = async () => {
+        const filteredProducts = filterProducts(allProducts, activeSearchTerm, activeBrandFilter);
         const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
         const endIndex = startIndex + PRODUCTS_PER_PAGE;
-        const paginatedProducts = allProducts.slice(startIndex, endIndex);
+        const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
         let productsWithConvertedPrice;
         try {
-            // Convertimos los precios de todos los productos de la página en paralelo para mayor eficiencia.
             productsWithConvertedPrice = await Promise.all(
                 paginatedProducts.map(async (product) => {
                     const convertedAmount = await convertCurrency(product.price, 'ARS', currentCurrency);
@@ -107,27 +245,37 @@ export function initCatalog() {
                 })
             );
         } catch (error) {
-            console.error("Error al convertir las monedas, mostrando precios en ARS:", error);
+            console.error("Error al convertir las monedas:", error);
             productsWithConvertedPrice = paginatedProducts.map(product => ({
                 ...product,
                 formattedPrice: formatCurrency(product.price, 'ARS')
             }));
         }
 
-        // Generamos el HTML de las tarjetas de producto.
         const productsHTML = productsWithConvertedPrice.map(product => {
-            // Preparamos la URL de la imagen Base64 para que sea válida.
-            const imageUrl = product.imageUrl.startsWith('data:image') 
-                ? product.imageUrl 
-                : `data:image/jpeg;base64,${product.imageUrl}`;
-
-            // Verificamos el estado del producto.
+            // --- CORRECCIÓN CLAVE: Manejo robusto de imágenes para el catálogo principal ---
+            let imageUrl;
+            if (product.imageUrl) {
+                if (product.imageUrl.startsWith('data:image')) {
+                    // Si es una URL de datos completa
+                    imageUrl = product.imageUrl;
+                } else if (product.imageUrl.startsWith('http')) {
+                    // Si es una URL externa
+                    imageUrl = product.imageUrl;
+                } else {
+                    // Si es una ruta relativa (ej: "data/img/...")
+                    imageUrl = product.imageUrl;
+                }
+            } else {
+                // Imagen por defecto si no hay ninguna
+                imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBkaXNwb25pYmxlPC90ZXh0Pjwvc3ZnPg==';
+            }
+            
             const isSoldOut = product.status === 'sold-out';
-
             return `
                 <div class="product-card ${isSoldOut ? 'sold-out' : ''}" data-id="${product.id}">
                     <div class="product-card-image-container">
-                        <img src="${imageUrl}" alt="${product.name}" class="product-card-image">
+                        <img src="${imageUrl}" alt="${product.name}" class="product-card-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBkaXNwb25pYmxlPC90ZXh0Pjwvc3ZnPg=='">
                         ${isSoldOut ? '<span class="sold-out-label">Agotado</span>' : ''}
                     </div>
                     <div class="product-card-info">
@@ -135,12 +283,8 @@ export function initCatalog() {
                         <p class="product-card-brand">${product.brand}</p>
                         <p class="product-card-description">${product.description || 'Una pieza única y elegante.'}</p>
                         <p class="product-card-price">${product.formattedPrice}</p>
-                        
-                        <!-- Contenedor con estado de disponibilidad y botón del carrito -->
                         <div class="product-card-actions">
-                            <span class="product-availability-status">
-                                ${isSoldOut ? 'Agotado' : 'Disponible'}
-                            </span>
+                            <span class="product-availability-status">${isSoldOut ? 'Agotado' : 'Disponible'}</span>
                             <button class="add-to-cart-btn" data-id="${product.id}" title="Agregar al Carrito" ${isSoldOut ? 'disabled' : ''}>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -152,57 +296,78 @@ export function initCatalog() {
             `;
         }).join('');
 
-        // Generamos el HTML de los botones de paginación.
-        const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
+        const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
         let paginationHTML = `<div class="pagination-container">`;
-        
         paginationHTML += `<button class="pagination-button" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>Anterior</button>`;
-        
         for (let i = 1; i <= totalPages; i++) {
             paginationHTML += `<button class="pagination-button ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
         }
-
         paginationHTML += `<button class="pagination-button" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>Siguiente</button>`;
         paginationHTML += `</div>`;
 
-        // Inyectamos todo el HTML generado en el contenedor principal.
-        catalogSection.innerHTML = `<div class="products-grid">${productsHTML}</div>${paginationHTML}`;
+        productsGridWrapper.innerHTML = `<div class="products-grid">${productsHTML}</div>`;
+        paginationWrapper.innerHTML = paginationHTML;
     };
 
     // --- MANEJO DE EVENTOS ---
-    /**
-     * Maneja los clics en los controles de paginación y en el botón de agregar al carrito usando delegación de eventos.
-     */
-    catalogSection.addEventListener('click', (e) => {
-        // --- Lógica de paginación ---
+    document.getElementById('catalog-section').addEventListener('click', (e) => {
+        // Lógica de paginación
         const paginationButton = e.target.closest('.pagination-button');
         if (paginationButton) {
             const pageAction = paginationButton.dataset.page;
-            if (pageAction === 'prev') {
-                changePage(currentPage - 1);
-            } else if (pageAction === 'next') {
-                changePage(currentPage + 1);
-            } else {
-                changePage(parseInt(pageAction, 10));
-            }
-            return; // Salimos si fue un clic en paginación
+            if (pageAction === 'prev') changePage(currentPage - 1);
+            else if (pageAction === 'next') changePage(currentPage + 1);
+            else changePage(parseInt(pageAction, 10));
+            return;
         }
-
-        // --- Lógica del botón "Agregar al Carrito" ---
+        // Lógica del botón "Agregar al Carrito"
         const addToCartBtn = e.target.closest('.add-to-cart-btn');
         if (addToCartBtn && !addToCartBtn.disabled) {
             console.log(`(Placeholder) Agregando 1 unidad del producto ${addToCartBtn.dataset.id} al carrito.`);
-            // Aquí irá la lógica del carrito en el futuro.
+            return;
+        }
+        // Lógica del botón de búsqueda (lupa)
+        const searchButton = e.target.closest('.search-button');
+        if (searchButton) {
+            const searchInput = searchBarWrapper.querySelector('.search-input');
+            if (searchInput) {
+                searchTerm = searchInput.value;
+                activeSearchTerm = searchTerm;
+                currentPage = 1;
+                renderProducts();
+            }
+            return;
+        }
+        
+        // Lógica para el filtro de marca (Tarea 3: YA ESTÁ IMPLEMENTADA)
+        const brandLink = e.target.closest('.brand-filter-link');
+        if (brandLink) {
+            e.preventDefault();
+            const brand = brandLink.dataset.brand;
+            if (activeBrandFilter === brand) {
+                activeBrandFilter = '';
+                brandLink.classList.remove('active');
+            } else {
+                document.querySelectorAll('.brand-filter-link.active').forEach(link => {
+                    link.classList.remove('active');
+                });
+                activeBrandFilter = brand;
+                brandLink.classList.add('active');
+            }
+            currentPage = 1;
+            renderProducts();
+            // Llama a una función global para cerrar el menú, si existe
+            if (window.closeBrandDropdown) {
+                window.closeBrandDropdown();
+            }
+            return;
         }
     });
 
-    /**
-     * Escucha el evento personalizado 'currencyChanged' disparado por el selector de moneda.
-     */
+    // Escucha el evento personalizado de cambio de moneda
     document.addEventListener('currencyChanged', async (e) => {
         currentCurrency = e.detail.currency;
-        console.log(`Moneda cambiada a: ${currentCurrency}`);
-        await renderProducts(); // Re-renderizamos con la nueva moneda
+        await renderProducts();
     });
 
     // --- INICIALIZACIÓN DEL MÓDULO ---

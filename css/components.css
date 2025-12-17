@@ -57,7 +57,7 @@ header.main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 65%;
     gap: 0.5rem;
     z-index: 10;
     position: relative;
@@ -70,9 +70,9 @@ header.main-header {
 }
 
 .header-logo-link #header-logo {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 54%;
     border: 3px solid #fff;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     transition: transform var(--transition-medium);
@@ -94,7 +94,7 @@ header.main-header {
 
 .header-text-content h1 {
     font-family: var(--subtitle-font);
-    font-size: 2.2rem;
+    font-size: 4.2rem;
     font-style: normal;
     font-weight: 700;
     color: #f0f0f0;
@@ -104,7 +104,7 @@ header.main-header {
 }
 
 .header-text-content .header-subtitle {
-    font-size: 1.2rem;
+    font-size: 2.2rem;
     color: #e0e0e0;
     text-shadow: 0 0 6px rgba(3, 169, 244, 0.4);
 }
@@ -1256,4 +1256,315 @@ body.custom-cursor-active *::after {
         opacity: 0;
         transform: scale(1.5) rotate(180deg);
     }
+}
+
+/* ==========================================================================
+   18. BARRA DE BÚSQUEDA (NUEVO)
+   ========================================================================== */
+.search-bar-container {
+    /* Añadimos position: relative para posicionar el dropdown */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    /* MODIFICADO: Quitamos el padding inferior para que el dropdown se pegue */
+    padding: 0.5rem 2rem 0; 
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    /* Hacemos la barra "sticky" para que se quede fija al hacer scroll */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* MODIFICADO: Añadimos un margen inferior al input y al botón para compensar el padding que quitamos */
+.search-input, .search-button {
+    margin-bottom: 0rem;
+}
+
+.search-input {
+    flex-grow: 1;
+    max-width: 600px;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: #fdfdfd;
+    transition: border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color-1);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.search-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--primary-color-1);
+    color: #ffffff;
+    font-family: var(--heading-font);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    box-shadow: var(--shadow);
+}
+
+.search-button:hover {
+    background-color: #d81b60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-autocomplete-dropdown {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 100%; /* Se coloca justo debajo de la barra de búsqueda */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px; /* Mismo ancho máximo que el input */
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000; /* Por encima de otros elementos */
+    padding: 0.5rem 0; /* Padding vertical para las filas */
+}
+
+/* Estilos para la lista <ul> */
+.autocomplete-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos para cada fila <li> */
+.autocomplete-list li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.autocomplete-list li:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para el enlace <a> dentro de cada fila */
+.autocomplete-list li a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color var(--transition-fast);
+}
+
+.autocomplete-list li a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Contenedor de la imagen */
+.autocomplete-poster {
+    flex-shrink: 0;
+}
+
+.autocomplete-poster img {
+    width: 50px;
+    height: 75px; /* Proporción de póster de película/serie */
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Contenedor de la información de texto */
+.autocomplete-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.autocomplete-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.autocomplete-type {
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilo para la fila "Ver más resultados" */
+.autocomplete-more {
+    text-align: center;
+}
+
+.autocomplete-more a {
+    justify-content: center;
+    font-weight: 600;
+    color: var(--primary-color-1);
+}
+
+/* ==========================================================================
+   20. ESTILOS PARA EL MENÚ DESPLEGABLE DE MARCAS (NUEVO)
+   ========================================================================== */
+
+/* --- Contenedor principal del desplegable (ya existe, pero lo refinamos) --- */
+.dropdown-content {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    background-color: #FFFFFF; /* Fondo blanco para contraste */
+    width: 800px;
+    max-width: 95vw;
+    box-shadow: 0px 12px 30px 0px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
+    z-index: 101;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) translateX(-50%);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease; /* Transición más suave */
+    border: 1px solid var(--border-color);
+}
+
+.dropdown-content.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) translateX(-50%);
+}
+
+/* --- Lista de marcas (ya existe, pero la refinamos) --- */
+.brand-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+    gap: 0.5rem 1rem;
+    padding: 1.5rem;
+    margin: 0;
+    list-style: none;
+    text-align: left;
+}
+
+/* --- Enlaces de cada marca (ya existe, pero los mejoramos) --- */
+.brand-list li a {
+    font-family: var(--font-family); /* Usamos la fuente principal */
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-color);
+    padding: 1rem 1.2rem; /* Más padding para que sea más fácil hacer clic */
+    text-decoration: none;
+    display: block;
+    border-radius: 8px;
+    transition: all var(--transition-medium); /* Transición más suave en todo */
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Efecto hover para los enlaces de marca (NUEVO) --- */
+.brand-list li a:hover {
+    background-color: var(--primary-color-1);
+    color: #FFFFFF;
+    transform: translateY(-2px); /* Pequeño efecto de elevación */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Efecto subrayado animado (NUEVO) --- */
+.brand-list li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #FFFFFF;
+    transition: all var(--transition-medium);
+    transform: translateX(-50%);
+}
+
+.brand-list li a:hover::after {
+    width: 80%;
+}
+
+/* ==========================================================================
+   21. BOTÓN DE LIMPIAR FILTROS (NUEVO)
+   ========================================================================== */
+.clear-filters-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    background-color: #6c757d; /* Un color gris para diferenciarlo */
+    color: #ffffff;
+    font-family: var(--heading-font);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    box-shadow: var(--shadow);
+}
+
+.clear-filters-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   22. ESTILOS PARA ENLACES DE MARCA ACTIVOS (NUEVO)
+   ========================================================================== */
+.brand-filter-link.active {
+    background-color: var(--primary-color-1) !important;
+    color: #FFFFFF !important;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   23. SISTEMA DE TOOLTIPS (BURBUJAS DE AYUDA) (NUEVO)
+   ========================================================================== */
+/* Clase base para cualquier elemento que necesite un tooltip */
+.has-tooltip {
+    position: relative;
+}
+
+/* El tooltip en sí */
+.has-tooltip::before {
+    content: attr(data-tooltip); /* El texto del tooltip viene del atributo data-tooltip */
+    position: absolute;
+    bottom: 125%; /* Lo posicionamos encima del elemento */
+    left: 50%;
+    transform: translateX(-50%) scale(0.8); /* Escala inicial más pequeña */
+    background-color: #333333;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    z-index: 1001;
+    
+    /* ESTADO INICIAL: Oculto y sin transición */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0s 1.5s, transform 0s 1.5s, visibility 0s 1.5s; /* La transición de opacidad tiene un retraso de 1.5s */
+}
+
+/* ESTADO HOVER: Mostramos el tooltip */
+.has-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1); /* Escala final a tamaño normal */
 }
