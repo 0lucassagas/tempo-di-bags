@@ -1322,103 +1322,87 @@ body.custom-cursor-active *::after {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* ==========================================================================
+   19. ESTILOS PARA EL AUTOCOMPLETADO DE BÚSQUEDA (SECCIÓN REEMPLAZADA)
+   ========================================================================== */
+
+/* Contenedor principal del autocompletado */
 .search-autocomplete-dropdown {
-    display: none; /* Oculto por defecto */
     position: absolute;
-    top: 100%; /* Se coloca justo debajo de la barra de búsqueda */
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 600px; /* Mismo ancho máximo que el input */
-    max-height: 400px;
-    overflow-y: auto;
-    background-color: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    z-index: 1000; /* Por encima de otros elementos */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-height: 320px; /* Altura máxima antes de que aparezca el scroll */
+    overflow-y: auto; /* Scroll vertical si hay muchos resultados */
+    z-index: 1000;
+    display: none; /* Se controla con JavaScript */
     padding: 0.5rem 0; /* Padding vertical para las filas */
 }
 
-/* Estilos para la lista <ul> */
-.autocomplete-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Estilos para cada fila <li> */
-.autocomplete-list li {
+/* Cada fila de resultado del autocompletado */
+.autocomplete-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
     border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
 }
 
-.autocomplete-list li:last-child {
+.autocomplete-item:last-child {
     border-bottom: none;
 }
 
-/* Estilos para el enlace <a> dentro de cada fila */
-.autocomplete-list li a {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    text-decoration: none;
-    color: var(--text-color);
-    transition: background-color var(--transition-fast);
+.autocomplete-item:hover {
+    background-color: #f8f8f8;
 }
 
-.autocomplete-list li a:hover {
-    background-color: #f0f0f0;
+/* Imagen dentro de cada fila de resultado */
+.autocomplete-item-image {
+    width: 50px;       /* Ancho fijo para todas las imágenes */
+    height: 50px;      /* Alto fijo para todas las imágenes */
+    object-fit: cover;  /* Recorta la imagen para que llene el espacio sin deformarse */
+    border-radius: 4px; /* Bordes ligeramente redondeados */
+    margin-right: 15px; /* Espacio entre la imagen y el texto */
+    flex-shrink: 0;     /* Evita que la imagen se encoja si el texto es muy largo */
 }
 
-/* Contenedor de la imagen */
-.autocomplete-poster {
-    flex-shrink: 0;
-}
-
-.autocomplete-poster img {
-    width: 50px;
-    height: 75px; /* Proporción de póster de película/serie */
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
-}
-
-/* Contenedor de la información de texto */
-.autocomplete-info {
+/* Contenedor de la información (nombre y marca) */
+.autocomplete-item-info {
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Centra verticalmente el texto */
     overflow: hidden;
+    flex-grow: 1; /* Permite que el contenedor del texto ocupe el espacio restante */
 }
 
-.autocomplete-title {
-    font-family: var(--font-family);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--text-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.autocomplete-type {
-    font-family: var(--font-family);
+/* Nombre del producto */
+.autocomplete-item-name {
+    font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
-    color: var(--text-muted);
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade "..." si el texto es muy largo */
+}
+
+/* Marca del producto */
+.autocomplete-item-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-/* Estilo para la fila "Ver más resultados" */
-.autocomplete-more {
-    text-align: center;
-}
-
-.autocomplete-more a {
-    justify-content: center;
-    font-weight: 600;
-    color: var(--primary-color-1);
 }
 
 /* ==========================================================================
