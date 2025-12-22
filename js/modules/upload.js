@@ -1,5 +1,5 @@
 // ==========================================================================
-// upload.js - Módulo para la carga de productos (Versión Definitiva)
+// js/modules/upload.js - Módulo para la carga de productos (Versión Definitiva)
 // ==========================================================================
 
 export function initUploadPage() {
@@ -22,12 +22,21 @@ export function initUploadPage() {
     const productSelect = document.getElementById('product-select');
     const newProductInput = document.getElementById('new-product-input');
 
+    // NUEVOS: Elementos para el logo de la marca
+    const newBrandLogoContainer = document.getElementById('new-brand-logo-container');
+    const newBrandLogoInput = document.getElementById('new-brand-logo-input');
+    const brandLogoDropZone = document.getElementById('brand-logo-drop-zone');
+    const brandLogoPreviewContainer = document.getElementById('brand-logo-preview-container');
+    const brandLogoPreview = document.getElementById('brand-logo-preview');
+    const removeBrandLogoBtn = document.getElementById('remove-brand-logo-btn');
+
     // Elementos de descripción y detalles
     const materialInput = document.getElementById('material-input');
     const dimensionsInput = document.getElementById('dimensions-input');
     const featuresInput = document.getElementById('features-input');
     
     const searchDetailsBtn = document.getElementById('search-details-btn');
+    const saveBrandBtn = document.getElementById('save-brand-btn'); // NUEVO: Botón para guardar solo la marca
 
     // Elementos para los modales
     const modalOverlay = document.getElementById('modal-overlay');
@@ -35,6 +44,7 @@ export function initUploadPage() {
     const modalCloseBtn = document.getElementById('modal-close-btn');
 
     let currentImageData = null;
+    let currentBrandLogoData = null; // Para guardar el logo en base64
 
     // --- CONFIGURACIÓN INICIAL DEL INPUT DE ARCHIVO ---
     fileInput.type = 'file';
@@ -98,6 +108,28 @@ export function initUploadPage() {
         fileInput.value = '';
     };
 
+    // --- NUEVO: GESTIÓN DEL LOGO DE MARCA ---
+    const showBrandLogoPreview = (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            currentBrandLogoData = e.target.result;
+            brandLogoPreview.src = currentBrandLogoData;
+            brandLogoPreviewContainer.style.display = 'block';
+            brandLogoDropZone.style.display = 'none';
+            checkFormValidity(); // NUEVO: Revisamos validez para habilitar/deshabilitar botón de guardar marca
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const clearBrandLogoPreview = () => {
+        currentBrandLogoData = null;
+        brandLogoPreview.src = '';
+        brandLogoPreviewContainer.style.display = 'none';
+        brandLogoDropZone.style.display = 'flex';
+        newBrandLogoInput.value = '';
+        checkFormValidity(); // NUEVO: Revisamos validez
+    };
+
     // --- LÓGICA DE MODALES ---
     const showModal = (type, message) => {
         const iconEmoji = type === 'success' ? '😊' : (type === 'error' ? '😞' : '🤔');
@@ -138,6 +170,14 @@ export function initUploadPage() {
 
         const isFormValid = currentImageData && price && brand && productName;
         saveBtn.disabled = !isFormValid;
+
+        // NUEVO: Lógica para habilitar el botón de guardar marca
+        const brandName = newBrandInput.value.trim();
+        if (brandName) {
+            saveBrandBtn.disabled = false;
+        } else {
+            saveBrandBtn.disabled = true;
+        }
 
         // Lógica de advertencia de duplicados
         if (brand && productName) {
@@ -187,9 +227,49 @@ export function initUploadPage() {
     modalCloseBtn.addEventListener('click', hideModal);
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
 
+    // NUEVOS: Event Listeners para el logo de marca
+    brandLogoDropZone.addEventListener('click', () => newBrandLogoInput.click());
+    brandLogoDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        brandLogoDropZone.classList.add('drag-over');
+    });
+    brandLogoDropZone.addEventListener('dragleave', () => {
+        brandLogoDropZone.classList.remove('drag-over');
+    });
+    brandLogoDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        brandLogoDropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) {
+            showBrandLogoPreview(e.dataTransfer.files[0]);
+        }
+    });
+    newBrandLogoInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            showBrandLogoPreview(e.target.files[0]);
+        }
+    });
+    removeBrandLogoBtn.addEventListener('click', clearBrandLogoPreview);
+
     // --- LÓGICA DE SINCRONIZACIÓN DE CAMPOS ---
-    brandSelect.addEventListener('change', () => { newBrandInput.value = ''; checkFormValidity(); updateSearchButton(); });
-    newBrandInput.addEventListener('input', () => { brandSelect.value = ''; checkFormValidity(); updateSearchButton(); });
+    brandSelect.addEventListener('change', () => { 
+        newBrandInput.value = ''; 
+        newBrandLogoContainer.style.display = 'none'; // Ocultar logo si se selecciona una marca existente
+        clearBrandLogoPreview(); // Limpiar logo si se selecciona una marca existente
+        checkFormValidity(); 
+        updateSearchButton(); 
+    });
+    newBrandInput.addEventListener('input', () => { 
+        brandSelect.value = '';
+        // Mostrar u ocultar el contenedor del logo
+        if (newBrandInput.value.trim()) {
+            newBrandLogoContainer.style.display = 'block';
+        } else {
+            newBrandLogoContainer.style.display = 'none';
+            clearBrandLogoPreview();
+        }
+        checkFormValidity(); 
+        updateSearchButton(); 
+    });
     
     productSelect.addEventListener('change', () => { newProductInput.value = ''; checkFormValidity(); updateSearchButton(); });
     newProductInput.addEventListener('input', () => { productSelect.value = ''; checkFormValidity(); updateSearchButton(); });
@@ -206,7 +286,25 @@ export function initUploadPage() {
         const finalBrand = brandSelect.value || newBrandInput.value.trim();
         const finalProductName = productSelect.value || newProductInput.value.trim();
 
-        // Si se usó una marca nueva, la guardamos en la lista
+        // --- NUEVO: LÓGICA PARA GUARDAR MARCA NUEVA (SI CORRESPONDE) ---
+        if (newBrandInput.value.trim()) {
+            let brandsData = JSON.parse(localStorage.getItem('tempoDiBagsBrandsData')) || {};
+            
+            // Si la marca no existe, la agregamos con su logo (si hay)
+            if (!brandsData[finalBrand]) {
+                brandsData[finalBrand] = {
+                    logo: currentBrandLogoData || null // Guardamos el logo en base64 o null
+                };
+                localStorage.setItem('tempoDiBagsBrandsData', JSON.stringify(brandsData));
+                console.log(`Nueva marca "${finalBrand}" guardada con logo.`);
+                
+                // Disparamos un evento para que otros módulos (como el menú de marcas) se actualicen
+                const event = new CustomEvent('brandListUpdated');
+                document.dispatchEvent(event);
+            }
+        }
+
+        // Si se usó una marca nueva, la guardamos en la lista (para compatibilidad)
         if (newBrandInput.value.trim()) {
             const brands = getBrands();
             if (!brands.includes(finalBrand)) {
@@ -263,6 +361,7 @@ export function initUploadPage() {
     cancelBtn.addEventListener('click', () => {
         if (confirm('¿Estás seguro de que quieres cancelar? Se perderán los datos no guardados.')) {
             clearImagePreview();
+            clearBrandLogoPreview();
             uploadForm.reset();
             uploadWarning.style.display = 'none';
             hideModal();
@@ -270,6 +369,56 @@ export function initUploadPage() {
             checkFormValidity();
         }
     });
+
+    // --- NUEVO: FUNCIÓN PARA GUARDAR SOLO LA MARCA (AHORA DENTRO DEL SCOPE) ---
+    /**
+     * Guarda solo la marca y su logo en localStorage.
+     * Se activa cuando el usuario presiona el botón "Guardar Marca".
+     */
+    async function saveBrandOnly() {
+        const brandName = newBrandInput.value.trim();
+        if (!brandName) {
+            showModal('error', 'Por favor, ingresa un nombre para la marca.');
+            return;
+        }
+
+        try {
+            let brandsData = JSON.parse(localStorage.getItem('tempoDiBagsBrandsData')) || {};
+
+            // Si la marca ya existe, no hacemos nada.
+            if (brandsData[brandName]) {
+                showModal('info', `La marca "${brandName}" ya existe. No se realizaron cambios.`);
+                return;
+            }
+
+            // Si no existe, la guardamos con su logo (si hay).
+            brandsData[brandName] = {
+                logo: currentBrandLogoData || null // Guardamos el logo en base64 o null
+            };
+            
+            localStorage.setItem('tempoDiBagsBrandsData', JSON.stringify(brandsData));
+            console.log(`Nueva marca "${brandName}" guardada con éxito.`);
+            
+            // Disparamos un evento para que otros módulos (como el menú de marcas) se actualicen.
+            const event = new CustomEvent('brandListUpdated');
+            document.dispatchEvent(event);
+
+            showModal('success', `¡La marca "${brandName}" se ha guardado correctamente.`);
+            
+            // Limpiamos los campos del formulario de marca
+            newBrandInput.value = '';
+            clearBrandLogoPreview();
+            newBrandLogoContainer.style.display = 'none';
+            checkFormValidity(); // Actualizamos el estado de los botones
+
+        } catch (error) {
+            console.error('Error al guardar la marca:', error);
+            showModal('error', 'Ocurrió un error al guardar la marca. Por favor, intenta de nuevo.');
+        }
+    }
+
+    // NUEVO: Event Listener para el botón de guardar marca
+    saveBrandBtn.addEventListener('click', saveBrandOnly);
 
     // --- INICIALIZACIÓN ---
     populateSelect(brandSelect, getBrands(), 'Seleccioná una marca');

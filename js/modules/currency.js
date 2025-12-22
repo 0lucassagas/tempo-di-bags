@@ -1,5 +1,5 @@
 // ==========================================================================
-// currency.js - Módulo para la conversión de monedas en tiempo real
+// currency.js - Módulo para la conversión de monedas (Versión con Tasas de Respaldo Corregidas)
 // ==========================================================================
 
 // Usaremos la API gratuita de exchangerate-api.com
@@ -39,9 +39,15 @@ const fetchExchangeRates = async () => {
             throw new Error(data.error_type || 'Error desconocido al obtener tasas.');
         }
     } catch (error) {
-        console.error('No se pudieron obtener las tasas de cambio:', error);
-        // En caso de error, devolvemos unas tasas por defecto para que la app no se rompa
-        return { USD: 1, ARS: 900, EUR: 0.92 }; 
+        console.error('No se pudieron obtener las tasas de cambio. Usando valores de respaldo corregidos.', error);
+        // --- CORRECCIÓN CLAVE: Tasas de respaldo en el formato CORRECTO (1 USD = X MONEDA) ---
+        // Estos valores representan cuántas unidades de cada moneda equivalen a 1 USD.
+        return { 
+            USD: 1, 
+            ARS: 833.33, // 1 USD ≈ 833.33 ARS
+            BRL: 5.00,    // 1 USD ≈ 5.00 BRL
+            EUR: 0.92     // 1 USD ≈ 0.92 EUR
+        }; 
     }
 };
 

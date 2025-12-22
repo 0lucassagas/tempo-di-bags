@@ -4,6 +4,70 @@
 
 import { convertCurrency, formatCurrency } from './currency.js';
 
+// --- NUEVO: Función para inicializar el selector de monedas (con imágenes) ---
+function initCurrencySelector() {
+    const currencyCurrent = document.getElementById('currencyCurrent');
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    const currentFlag = document.getElementById('currentFlag');
+    const currentName = document.getElementById('currentName');
+
+    if (!currencyCurrent || !currencyDropdown) return;
+
+    // --- CORRECCIÓN: Siempre inicia en ARS por defecto ---
+    const savedCurrency = localStorage.getItem('selectedCurrency') || 'ARS';
+    
+    // --- CAMBIO CLAVE: Usamos backgroundImage en lugar de textContent para la bandera ---
+    const updateCurrencyUI = (currency) => {
+        const selectedOption = currencyDropdown.querySelector(`[data-currency="${currency}"]`);
+        if (selectedOption) {
+            currentFlag.style.backgroundImage = `url('${selectedOption.dataset.flag}')`;
+            currentName.textContent = currency;
+        }
+    };
+
+    // Establecemos la moneda inicial
+    updateCurrencyUI(savedCurrency);
+
+    // Event listener para el botón principal
+    currencyCurrent.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = currencyCurrent.getAttribute('aria-expanded') === 'true';
+        currencyCurrent.setAttribute('aria-expanded', !isExpanded);
+        currencyDropdown.classList.toggle('show');
+    });
+
+    // Event listener para las opciones del menú
+    currencyDropdown.addEventListener('click', (e) => {
+        if (e.target.classList.contains('currency-option')) {
+            const newCurrency = e.target.dataset.currency;
+            
+            // Guardamos la nueva moneda en localStorage
+            localStorage.setItem('selectedCurrency', newCurrency);
+            
+            // Actualizamos la UI
+            updateCurrencyUI(newCurrency);
+            
+            // Cerramos el dropdown
+            currencyDropdown.classList.remove('show');
+            currencyCurrent.setAttribute('aria-expanded', 'false');
+
+            // --- CLAVE: Disparamos el evento personalizado que catalog.js está esperando ---
+            const event = new CustomEvent('currencyChanged', {
+                detail: { currency: newCurrency }
+            });
+            document.dispatchEvent(event);
+        }
+    });
+
+    // Cerrar el menú al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (!currencyDropdown.contains(e.target) && e.target !== currencyCurrent) {
+            currencyDropdown.classList.remove('show');
+            currencyCurrent.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
 /**
  * Inicializa la funcionalidad del catálogo.
  */
@@ -35,6 +99,13 @@ export function initCatalog() {
     
     // Variable de estado para el filtro de marca
     let activeBrandFilter = ''; // La marca que filtra el catálogo
+
+    // --- NUEVO: Escuchamos el evento de filtrado desde el menú de marcas ---
+    document.addEventListener('filterByBrand', (e) => {
+        activeBrandFilter = e.detail.brand;
+        currentPage = 1; // Reiniciamos a la primera página
+        renderProducts(); // Volvemos a renderizar el catálogo con el filtro aplicado
+    });
 
     // --- FUNCIÓN PARA CARGAR DATOS INICIALES ---
     const seedInitialData = async () => {
@@ -75,7 +146,7 @@ export function initCatalog() {
         return filtered;
     };
 
-    // --- FUNCIÓN PARA RENDERIZAR LA BARRA DE BÚSQUEDA (CON ICONOS) ---
+    // --- FUNCIÓN PARA RENDERIZAR LA BARRA DE BÚSQUEDA (CON SELECTOR DE MONEDAS) ---
     const renderSearchBar = () => {
         searchBarWrapper.innerHTML = `
             <div class="search-bar-container">
@@ -100,9 +171,26 @@ export function initCatalog() {
                     <span>Limpiar</span>
                 </button>
 
+                <!-- NUEVO: Selector de Monedas con Imágenes -->
+                <div class="currency-selector-wrapper">
+                    <button class="currency-current" id="currencyCurrent" aria-haspopup="true" aria-expanded="false">
+                        <div class="currency-flag-icon" id="currentFlag"></div>
+                        <span class="currency-name" id="currentName">ARS</span>
+                    </button>
+                    <div class="currency-dropdown" id="currencyDropdown">
+                        <button class="currency-option" data-currency="ARS" data-flag="https://flagcdn.com/48x36/ar.png">Argentina (ARS)</button>
+                        <button class="currency-option" data-currency="USD" data-flag="https://flagcdn.com/48x36/us.png">EE.UU. (USD)</button>
+                        <button class="currency-option" data-currency="BRL" data-flag="https://flagcdn.com/48x36/br.png">Brasil (BRL)</button>
+                        <button class="currency-option" data-currency="EUR" data-flag="https://flagcdn.com/48x36/eu.png">España (EUR)</button>
+                    </div>
+                </div>
+
                 <div class="search-autocomplete-dropdown"></div>
             </div>
         `;
+
+        // Inicializamos el selector de monedas después de inyectar el HTML
+        initCurrencySelector();
 
         const searchInput = searchBarWrapper.querySelector('.search-input');
         const dropdown = searchBarWrapper.querySelector('.search-autocomplete-dropdown');
@@ -162,22 +250,19 @@ export function initCatalog() {
             const item = document.createElement('div');
             item.classList.add('autocomplete-item');
 
-            // --- CORRECCIÓN CLAVE: Manejo robusto de imágenes para el autocompletado ---
+            // --- MODIFICACIÓN: Manejo robusto de imágenes para el autocompletado ---
             let imageUrl;
             if (product.imageUrl) {
                 if (product.imageUrl.startsWith('data:image')) {
-                    // Si es una URL de datos completa
                     imageUrl = product.imageUrl;
                 } else if (product.imageUrl.startsWith('http')) {
-                    // Si es una URL externa
                     imageUrl = product.imageUrl;
                 } else {
-                    // Si es una ruta relativa (ej: "data/img/...")
                     imageUrl = product.imageUrl;
                 }
             } else {
                 // Imagen por defecto si no hay ninguna
-                imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRUVFIi8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNDQ0IyLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdIMTIuMDFNMjEgMTJIMjEuMDFNNCAxMkg0LjAxTDEyIDZDNy4wMjkgNiAzIDkuMDI5IDMgMTRTNy4wMjkgMjIgMTIgMjJDMTIuMDAxIDIyIDEyLjAyMSAyMiAxMi4wMzEgMjJDMTIuMDQxIDIyIDEyLjA1MSAyMiAxMi4wNjEgMjJDMTYuOTcxIDIyIDIwIDE4Ljk3MSAyMCAxNFMxNi45NzEgNiAxMiA2WiIgc3Ryb2tlPSIjOTk5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+';
+                imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRUVFIi8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNDQ0IyLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdIMTIuMDFNMjEgMTJIMjEuMDFNNCAxMkg0LjAxTDEyIDZDNy4wMjkgNiAzIDkuMDI5IDMgMTRTNy4wMjkgMjIgMjJDMTIuMDEgMjIgMTIuMDIxIDIyIDEyLjAzMSAyMkMxNi45NzEgMjIgMjAgMTguOTcxIDIwIDE0UzE2Ljk3MSA2IDEyIDZaIiBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo8L3N2Zz4=';
             }
 
             item.innerHTML = `
@@ -253,17 +338,14 @@ export function initCatalog() {
         }
 
         const productsHTML = productsWithConvertedPrice.map(product => {
-            // --- CORRECCIÓN CLAVE: Manejo robusto de imágenes para el catálogo principal ---
+            // --- MODIFICACIÓN: Manejo robusto de imágenes para el catálogo principal ---
             let imageUrl;
             if (product.imageUrl) {
                 if (product.imageUrl.startsWith('data:image')) {
-                    // Si es una URL de datos completa
                     imageUrl = product.imageUrl;
                 } else if (product.imageUrl.startsWith('http')) {
-                    // Si es una URL externa
                     imageUrl = product.imageUrl;
                 } else {
-                    // Si es una ruta relativa (ej: "data/img/...")
                     imageUrl = product.imageUrl;
                 }
             } else {
@@ -339,29 +421,7 @@ export function initCatalog() {
             return;
         }
         
-        // Lógica para el filtro de marca (Tarea 3: YA ESTÁ IMPLEMENTADA)
-        const brandLink = e.target.closest('.brand-filter-link');
-        if (brandLink) {
-            e.preventDefault();
-            const brand = brandLink.dataset.brand;
-            if (activeBrandFilter === brand) {
-                activeBrandFilter = '';
-                brandLink.classList.remove('active');
-            } else {
-                document.querySelectorAll('.brand-filter-link.active').forEach(link => {
-                    link.classList.remove('active');
-                });
-                activeBrandFilter = brand;
-                brandLink.classList.add('active');
-            }
-            currentPage = 1;
-            renderProducts();
-            // Llama a una función global para cerrar el menú, si existe
-            if (window.closeBrandDropdown) {
-                window.closeBrandDropdown();
-            }
-            return;
-        }
+        // --- ELIMINADO: La lógica del filtro de marca ahora está en layout.js ---
     });
 
     // Escucha el evento personalizado de cambio de moneda

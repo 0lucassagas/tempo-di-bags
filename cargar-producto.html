@@ -47,7 +47,7 @@
                                 <polyline points="17,8 12,3 7,8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
-                            <p class="drop-zone-text">Arrastrá y soltá la foto acá</p>
+                            <p class="drop-zone-text">Arrastra el producto aquí o haz clic para buscar</p>
                         </div>
                         
                         <!-- Aquí se mostrará la vista previa de la imagen -->
@@ -68,7 +68,7 @@
                     <div class="step-number">2</div>
                     <div class="step-content">
                         <h2>Detalles del Artículo</h2>
-                        <p>Completa la información para que sea fácil de encontrar.</p>
+                        <p>Completa la información del Producto.</p>
                         
                         <form id="upload-form">
                             <div class="form-group">
@@ -87,6 +87,35 @@
                                         <!-- Las marcas se inyectarán aquí por JS -->
                                     </select>
                                     <input type="text" id="new-brand-input" class="new-brand-input" placeholder="Ej: Vuitton (si no está en la lista)">
+                                </div>
+
+                                <!-- NUEVO: Contenedor para el logo de la marca (inicialmente oculto) -->
+                                <div id="new-brand-logo-container" class="new-brand-logo-container" style="display: none;">
+                                    <label for="new-brand-logo-input">Logo de la Marca (Opcional)</label>
+                                    <div class="logo-upload-area">
+                                        <input type="file" id="new-brand-logo-input" accept="image/*" style="display: none;">
+                                        <div id="brand-logo-drop-zone" class="brand-logo-drop-zone">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17,8 12,3 7,8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                            <p>Arrastra el logo aquí o haz clic para buscar</p>
+                                        </div>
+                                        <div id="brand-logo-preview-container" class="brand-logo-preview-container" style="display: none;">
+                                            <img id="brand-logo-preview" src="" alt="Vista previa del logo">
+                                            <button type="button" id="remove-brand-logo-btn" class="remove-image-btn" title="Quitar logo">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- BOTÓN "GUARDAR MARCA" MOVIDO AQUÍ -->
+                                    <div class="form-group">
+                                        <button type="button" id="save-brand-btn" class="btn btn-outline-brand" disabled>Guardar Marca</button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -109,7 +138,7 @@
                     <div class="step-number">2.5</div>
                     <div class="step-content">
                         <h2>Detalles Específicos</h2>
-                        <p>Añade información clave para el pop-up de detalles y el vestidor virtual.</p>
+                        <p>Añade información adicional.</p>
                         
                         <div class="form-group">
                             <label for="material-input">Material</label>
@@ -127,9 +156,9 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Helper para buscar detalles -->
-                <div class="details-helper">
+                
+                <!-- Helper para buscar detalles (margin ajustado) -->
+                <div class="details-helper" style="margin-top: 0.5rem;">
                     <p>¿No conocés los detalles?</p>
                     <button type="button" id="search-details-btn" class="btn btn-secondary" disabled>
                         Buscar Características en Google

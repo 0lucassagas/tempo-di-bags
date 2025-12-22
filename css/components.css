@@ -52,7 +52,6 @@ header.main-header {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Contenedor Flexbox para el nuevo diseño del header (logo-izquierda, texto-centro, logo-derecha) --- */
 .header-content-wrapper {
     display: flex;
     justify-content: space-between;
@@ -151,7 +150,6 @@ header.main-header::after {
     z-index: 102;
 }
 
-/* --- Estilos Unificados para Botones y Enlaces de Navegación --- */
 .menu-button,
 .nav-link-sobre-nosotros,
 .nav-link-virtual-wardrobe {
@@ -185,70 +183,6 @@ header.main-header::after {
     position: relative;
 }
 
-.menu-button::after {
-    content: '';
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(45deg);
-    transition: transform var(--transition-medium);
-}
-
-.menu-button.active::after {
-    transform: rotate(-135deg);
-}
-
-/* --- Estilos Corregidos para el Desplegable --- */
-.dropdown-content {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 50%;
-    background-color: #FFFFFF;
-    width: 800px;
-    max-width: 95vw;
-    box-shadow: 0px 8px 25px 0px rgba(0, 0, 0, 0.15);
-    z-index: 101;
-    border-radius: 12px;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px) translateX(-50%);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
-
-.dropdown-content.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) translateX(-50%);
-}
-
-.brand-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem 1.5rem;
-    padding: 1.5rem;
-    margin: 0;
-    list-style: none;
-    text-align: left;
-}
-
-.brand-list li a {
-    color: var(--text-color);
-    padding: 0.8rem 1rem;
-    text-decoration: none;
-    font-family: var(--font-family);
-    font-weight: 500;
-    font-size: 0.95rem;
-    display: block;
-    border-radius: 8px;
-    transition: background-color var(--transition-fast);
-}
-
-.brand-list li a:hover {
-    background-color: var(--primary-color-1);
-    color: #FFFFFF;
-}
 
 /* ==========================================================================
    5. ENLACE ACTIVO EN LA NAVEGACIÓN
@@ -370,7 +304,7 @@ header.main-header::after {
 }
 
 /* ==========================================================================
-   8. FOOTER CON CONTACTO (IMAGEN) Y MAPA (IFRAME) - VERSIÓN LIMPIA
+   8. FOOTER CON CONTACTO (IMAGEN) Y MAPA (IFRAME)
    ========================================================================== */
 footer {
     width: 100%;
@@ -386,7 +320,6 @@ footer {
     overflow: hidden;
 }
 
-/* --- Efectos de humo de fondo (se mantienen para la estética premium) --- */
 .footer-smoke-container {
     position: absolute;
     top: 0;
@@ -418,12 +351,10 @@ footer {
     animation: smoke-from-right 25s infinite ease-in-out;
 }
 
-/* --- Contenedor principal con layout de dos columnas --- */
 .footer-content {
     display: flex;
     justify-content: space-between;
-    /* Alinea los elementos al inicio (parte superior) */
-    align-items: flex-start; 
+    align-items: flex-start;
     gap: 2rem;
     padding: 2rem 4rem;
     max-width: 1400px;
@@ -433,7 +364,6 @@ footer {
     z-index: 5;
 }
 
-/* --- Columna de la IZQUIERDA: Contacto (CON LA NUEVA IMAGEN) --- */
 .contact-placeholder {
     flex: 1;
     display: flex;
@@ -444,9 +374,8 @@ footer {
 
 .footer-contact-image-container {
     width: 100%;
-    max-width: 507px; /* Ajusta este valor según el diseño */
-    height: 376px; /* Ajusta este valor según la proporción de tu imagen */
-    /* --- LÍNEA ACTUALIZADA CON LA NUEVA IMAGEN --- */
+    max-width: 507px;
+    height: 376px;
     background-image: url('https://z-cdn-media.chatglm.cn/files/ede2630b-81ba-4d63-80f3-e1f494ac5b69.png?auth_key=1865823652-507b5eec2a4f4e7d9bdb61e76d3d1d91-0-d9fdb623454bb2d9843466b812aa1551');
     background-size: contain;
     background-repeat: no-repeat;
@@ -454,59 +383,20 @@ footer {
     position: relative;
 }
 
-/* Estilo base para todos los enlaces invisibles (sin cambios) */
 .contact-link {
     position: absolute;
     display: block;
-    /* Oculta el texto pero mantiene el enlace accesible */
     text-indent: -9999px;
     font-size: 0;
     line-height: 0;
 }
 
-/* --- Posicionamiento de los enlaces (VALORES PRECISOS SEGÚN TU IMAGEN) --- */
+.contact-link-phone1 { top: 34%; left: 14%; width: 38%; height: 8%; }
+.contact-link-phone2 { top: 34%; left: 57%; width: 36%; height: 8%; }
+.contact-link-instagram { top: 66%; left: 1%; width: 47%; height: 14%; }
+.contact-link-facebook { top: 66%; left: 59%; width: 39%; height: 14%; }
+.contact-link-tiktok { top: 86%; left: 23%; width: 52%; height: 14%; }
 
-/* Teléfono 1 */
-.contact-link-phone1 {
-    top: 34%;
-    left: 14%;
-    width: 38%;
-    height: 8%;
-}
-
-/* Teléfono 2 */
-.contact-link-phone2 {
-    top: 34%;
-    left: 57%;
-    width: 36%;
-    height: 8%;
-}
-
-/* Instagram */
-.contact-link-instagram {
-    top: 66%;
-    left: 1%;
-    width: 47%;
-    height: 14%;
-}
-
-/* Facebook */
-.contact-link-facebook {
-    top: 66%;
-    left: 59%;
-    width: 39%;
-    height: 14%;
-}
-
-.contact-link-tiktok {
-    top: 86%;
-    left: 23%;
-    width: 52%;
-    height: 14%;
-}
-
-
-/* --- Columna de la DERECHA: Mapa (SIN CAMBIOS, PERFECTO COMO ESTÁ) --- */
 .map-container {
     flex: 2;
     min-width: 0;
@@ -765,6 +655,7 @@ footer {
     gap: 0.75rem;
 }
 
+
 /* ==========================================================================
    10. BOTONES
    ========================================================================== */
@@ -999,7 +890,7 @@ footer {
 }
 
 /* ==========================================================================
-   13. CATÁLOGO DE PRODUCTOS (SIMPLIFICADO)
+   13. CATÁLOGO DE PRODUCTOS
    ========================================================================== */
 .products-grid {
     display: grid;
@@ -1024,10 +915,9 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* --- Contenedor de la imagen para que se vea al 100% --- */
 .product-card-image-container {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Proporción cuadrada */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     position: relative;
     border-radius: 12px 12px 0 0;
@@ -1052,7 +942,6 @@ footer {
     flex-grow: 1;
 }
 
-/* --- Tipografías más grandes --- */
 .product-card-title {
     font-family: var(--heading-font);
     font-size: 1.4rem;
@@ -1089,7 +978,6 @@ footer {
     margin-top: auto;
 }
 
-/* --- Contenedor de acciones del producto (estado y botón) --- */
 .product-card-actions {
     display: flex;
     justify-content: space-between;
@@ -1097,7 +985,6 @@ footer {
     margin-top: 1rem;
 }
 
-/* --- Estado de Disponibilidad (NUEVO) --- */
 .product-availability-status {
     font-family: var(--subtitle-font);
     font-size: 0.9rem;
@@ -1107,7 +994,6 @@ footer {
     text-transform: lowercase;
 }
 
-/* --- Botón "Agregar al Carrito" (SIN CAMBIOS) --- */
 .add-to-cart-btn {
     width: 40px;
     height: 40px;
@@ -1187,7 +1073,6 @@ body.custom-cursor-active *::after {
     transform-origin: top left;
 }
 
-/* --- ESTILO PARA EL ESTADO "HOVER" DORADO --- */
 #custom-cursor.is-hovering .cursor-body {
     fill: #FFD700;
     stroke: #B8860B;
@@ -1210,20 +1095,18 @@ body.custom-cursor-active *::after {
     animation: sparkle-animation 1s ease-out forwards;
 }
 
-/* --- Clase para los destellos dorados --- */
 .sparkle-gold {
     background-color: #FFD700;
     box-shadow: 0 0 8px #FFD700;
 }
 
-/* --- Clase para los destellos plateados --- */
 .sparkle-silver {
     background-color: #E5E5E5;
     box-shadow: 0 0 8px #C0C0C0;
 }
 
 /* ==========================================================================
-   17. ANIMACIONES (CONSOLIDADO Y LIMPIO)
+   17. ANIMACIONES
    ========================================================================== */
 @keyframes neon-slide-left {
     0% { transform: translateX(-100%); }
@@ -1244,43 +1127,29 @@ body.custom-cursor-active *::after {
 @keyframes smoke-from-right {
     0% { transform: translateX(0); }
     50% { transform: translateX(calc(-50vw - 50%)); }
-    100% { transform: transformX(0); }
+    100% { transform: translateX(0); }
 }
 
 @keyframes sparkle-animation {
-    0% {
-        opacity: 1;
-        transform: scale(0) rotate(0deg);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1.5) rotate(180deg);
-    }
+    0% { opacity: 1; transform: scale(0) rotate(0deg); }
+    100% { opacity: 0; transform: scale(1.5) rotate(180deg); }
 }
 
 /* ==========================================================================
-   18. BARRA DE BÚSQUEDA (NUEVO)
+   18. BARRA DE BÚSQUEDA
    ========================================================================== */
 .search-bar-container {
-    /* Añadimos position: relative para posicionar el dropdown */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
-    /* MODIFICADO: Quitamos el padding inferior para que el dropdown se pegue */
-    padding: 0.5rem 2rem 0; 
+    padding: 0.5rem 2rem 0;
     background-color: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
-    /* Hacemos la barra "sticky" para que se quede fija al hacer scroll */
     position: sticky;
     top: 0;
     z-index: 10;
-}
-
-/* MODIFICADO: Añadimos un margen inferior al input y al botón para compensar el padding que quitamos */
-.search-input, .search-button {
-    margin-bottom: 0rem;
 }
 
 .search-input {
@@ -1323,30 +1192,27 @@ body.custom-cursor-active *::after {
 }
 
 /* ==========================================================================
-   19. ESTILOS PARA EL AUTOCOMPLETADO DE BÚSQUEDA (SECCIÓN REEMPLAZADA)
+   19. ESTILOS PARA EL AUTOCOMPLETADO DE BÚSQUEDA
    ========================================================================== */
-
-/* Contenedor principal del autocompletado */
 .search-autocomplete-dropdown {
     position: absolute;
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 600px; /* Mismo ancho máximo que el input */
+    max-width: 600px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-top: none;
     border-radius: 0 0 8px 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    max-height: 320px; /* Altura máxima antes de que aparezca el scroll */
-    overflow-y: auto; /* Scroll vertical si hay muchos resultados */
+    max-height: 320px;
+    overflow-y: auto;
     z-index: 1000;
-    display: none; /* Se controla con JavaScript */
-    padding: 0.5rem 0; /* Padding vertical para las filas */
+    display: none;
+    padding: 0.5rem 0;
 }
 
-/* Cada fila de resultado del autocompletado */
 .autocomplete-item {
     display: flex;
     align-items: center;
@@ -1364,26 +1230,23 @@ body.custom-cursor-active *::after {
     background-color: #f8f8f8;
 }
 
-/* Imagen dentro de cada fila de resultado */
 .autocomplete-item-image {
-    width: 50px;       /* Ancho fijo para todas las imágenes */
-    height: 50px;      /* Alto fijo para todas las imágenes */
-    object-fit: cover;  /* Recorta la imagen para que llene el espacio sin deformarse */
-    border-radius: 4px; /* Bordes ligeramente redondeados */
-    margin-right: 15px; /* Espacio entre la imagen y el texto */
-    flex-shrink: 0;     /* Evita que la imagen se encoja si el texto es muy largo */
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 15px;
+    flex-shrink: 0;
 }
 
-/* Contenedor de la información (nombre y marca) */
 .autocomplete-item-info {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra verticalmente el texto */
+    justify-content: center;
     overflow: hidden;
-    flex-grow: 1; /* Permite que el contenedor del texto ocupe el espacio restante */
+    flex-grow: 1;
 }
 
-/* Nombre del producto */
 .autocomplete-item-name {
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
@@ -1391,10 +1254,9 @@ body.custom-cursor-active *::after {
     color: #333;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Añade "..." si el texto es muy largo */
+    text-overflow: ellipsis;
 }
 
-/* Marca del producto */
 .autocomplete-item-brand {
     font-family: 'Montserrat', sans-serif;
     font-size: 0.8rem;
@@ -1406,93 +1268,116 @@ body.custom-cursor-active *::after {
 }
 
 /* ==========================================================================
-   20. ESTILOS PARA EL MENÚ DESPLEGABLE DE MARCAS (NUEVO)
+   20. ESTILOS PARA EL MENÚ DESPLEGABLE DE MARCAS (MEJORADO - GRILLA DE 5)
    ========================================================================== */
 
-/* --- Contenedor principal del desplegable (ya existe, pero lo refinamos) --- */
+/* --- Contenedor principal del desplegable --- */
 .dropdown-content {
-    position: absolute;
-    top: calc(100% + 0.5rem);
+    /* position: absolute; */ /* <-- COMENTADO: causaba que se corte por los márgenes */
+    position: fixed; /* <-- NUEVO: se posiciona respecto a la pantalla */
+
+    /* top: calc(100% + 0.5rem); */ /* <-- COMENTADO */
+    top: 50%; /* <-- NUEVO: centrado vertical */
+
+    /* left: 50%; */ /* se mantiene */
     left: 50%;
-    background-color: #FFFFFF; /* Fondo blanco para contraste */
-    width: 800px;
+
+    background-color: #FFFFFF;
+    width: 1000px; /* Ancho aumentado para albergar 5 columnas */
     max-width: 95vw;
-    box-shadow: 0px 12px 30px 0px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
+
+    max-height: 90vh; /* <-- NUEVO: nunca supera la altura de la pantalla */
+    overflow-y: auto; /* <-- NUEVO: scroll interno si es necesario */
+
+    box-shadow: 0px 12px 30px 0px rgba(0, 0, 0, 0.2);
     z-index: 101;
     border-radius: 12px;
-    overflow: hidden;
+    /* overflow: hidden; */ /* <-- COMENTADO: podía cortar contenido */
+    border: 1px solid var(--border-color);
+
+    /* ESTADO INICIAL: Oculto por defecto */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px) translateX(-50%);
-    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease; /* Transición más suave */
-    border: 1px solid var(--border-color);
+
+    /* transform: translateX(-50%) translateY(-10px); */ /* <-- COMENTADO */
+    transform: translate(-50%, -50%); /* <-- NUEVO: centrado real */
+
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
 }
 
+/* ESTADO ACTIVO: Visible cuando tiene la clase .show */
 .dropdown-content.show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0) translateX(-50%);
+
+    /* transform: translateX(-50%) translateY(0); */ /* <-- COMENTADO */
+    transform: translate(-50%, -50%); /* <-- Mantiene el centrado */
 }
 
-/* --- Lista de marcas (ya existe, pero la refinamos) --- */
+/* --- Lista de marcas (Grilla de 5 columnas) --- */
 .brand-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
-    gap: 0.5rem 1rem;
-    padding: 1.5rem;
+    grid-template-columns: repeat(5, 1fr); /* <-- CLAVE: 5 columnas iguales */
+    gap: 1.5rem; /* Espacio entre los logos */
+    padding: 2rem;
     margin: 0;
     list-style: none;
-    text-align: left;
+    text-align: center;
 }
 
-/* --- Enlaces de cada marca (ya existe, pero los mejoramos) --- */
+/* --- Enlaces de cada marca (Contenedores centrados) --- */
 .brand-list li a {
-    font-family: var(--font-family); /* Usamos la fuente principal */
-    font-weight: 500;
-    font-size: 1rem;
-    color: var(--text-color);
-    padding: 1rem 1.2rem; /* Más padding para que sea más fácil hacer clic */
     text-decoration: none;
-    display: block;
-    border-radius: 8px;
-    transition: all var(--transition-medium); /* Transición más suave en todo */
+    
+    /* --- MEJORA CLAVE: Contenedor flexible y cuadrado para centrar el logo --- */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: 12px;
+    transition: all var(--transition-medium);
     position: relative;
     overflow: hidden;
+    height: 170px; /* Altura ajustada para una mejor proporción con el logo de 150px */
 }
 
-/* --- Efecto hover para los enlaces de marca (NUEVO) --- */
 .brand-list li a:hover {
-    background-color: var(--primary-color-1);
-    color: #FFFFFF;
-    transform: translateY(-2px); /* Pequeño efecto de elevación */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #f0f0f0; /* Fondo sutil al hacer hover */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Efecto subrayado animado (NUEVO) --- */
-.brand-list li a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: #FFFFFF;
-    transition: all var(--transition-medium);
-    transform: translateX(-50%);
+/* --- Logo dentro de la lista de marcas (Grandes y Cuadrados) --- */
+.brand-list-logo {
+    width: 150px;
+    height: 150px;
+    
+    object-fit: contain;
+    border-radius: 8px;
+    flex-shrink: 0;
+    
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.brand-list li a:hover::after {
-    width: 80%;
+/* --- Texto de respaldo (solo visible si la imagen falla) --- */
+.brand-list li a span {
+    display: none; 
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 1rem;
 }
-
 /* ==========================================================================
-   21. BOTÓN DE LIMPIAR FILTROS (NUEVO)
+   21. BOTÓN DE LIMPIAR FILTROS
    ========================================================================== */
 .clear-filters-btn {
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 25px;
-    background-color: #6c757d; /* Un color gris para diferenciarlo */
+    background-color: #6c757d;
     color: #ffffff;
     font-family: var(--heading-font);
     font-weight: 600;
@@ -1509,7 +1394,7 @@ body.custom-cursor-active *::after {
 }
 
 /* ==========================================================================
-   22. ESTILOS PARA ENLACES DE MARCA ACTIVOS (NUEVO)
+   22. ESTILOS PARA ENLACES DE MARCA ACTIVOS
    ========================================================================== */
 .brand-filter-link.active {
     background-color: var(--primary-color-1) !important;
@@ -1518,20 +1403,18 @@ body.custom-cursor-active *::after {
 }
 
 /* ==========================================================================
-   23. SISTEMA DE TOOLTIPS (BURBUJAS DE AYUDA) (NUEVO)
+   23. SISTEMA DE TOOLTIPS (BURBUJAS DE AYUDA)
    ========================================================================== */
-/* Clase base para cualquier elemento que necesite un tooltip */
 .has-tooltip {
     position: relative;
 }
 
-/* El tooltip en sí */
 .has-tooltip::before {
-    content: attr(data-tooltip); /* El texto del tooltip viene del atributo data-tooltip */
+    content: attr(data-tooltip);
     position: absolute;
-    bottom: 125%; /* Lo posicionamos encima del elemento */
+    bottom: 125%;
     left: 50%;
-    transform: translateX(-50%) scale(0.8); /* Escala inicial más pequeña */
+    transform: translateX(-50%) scale(0.8);
     background-color: #333333;
     color: #fff;
     padding: 0.5rem 1rem;
@@ -1539,16 +1422,813 @@ body.custom-cursor-active *::after {
     font-size: 0.9rem;
     white-space: nowrap;
     z-index: 1001;
-    
-    /* ESTADO INICIAL: Oculto y sin transición */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0s 1.5s, transform 0s 1.5s, visibility 0s 1.5s; /* La transición de opacidad tiene un retraso de 1.5s */
+    transition: opacity 0s 1.5s, transform 0s 1.5s, visibility 0s 1.5s;
 }
 
-/* ESTADO HOVER: Mostramos el tooltip */
 .has-tooltip:hover::before {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) scale(1); /* Escala final a tamaño normal */
+    transform: translateX(-50%) scale(1);
+}
+
+/* ==========================================================================
+   24. SELECTOR DE MONEDAS (CON IMÁGENES DE BANDERAS)
+   ========================================================================== */
+.currency-selector-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.currency-current {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    min-height: 42px;
+    cursor: pointer;
+    font-family: var(--heading-font);
+    font-weight: 600;
+    transition: all var(--transition-medium);
+    box-shadow: var(--shadow);
+}
+
+.currency-current:hover {
+    background-color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.currency-current::after {
+    content: '';
+    border: solid var(--text-muted);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform var(--transition-medium);
+}
+
+.currency-current[aria-expanded="true"]::after {
+    transform: rotate(-135deg);
+}
+
+.currency-flag-icon {
+    width: 24px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 2px;
+}
+
+.currency-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 8px 25px 0px rgba(0, 0, 0, 0.15);
+    z-index: 101;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.currency-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.currency-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: none;
+    background: none;
+    text-align: left;
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.currency-option:hover {
+    background-color: var(--primary-color-1);
+    color: #FFFFFF;
+}
+
+.currency-option::before {
+    content: '';
+    width: 24px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.currency-option[data-currency="ARS"]::before { background-image: url('https://flagcdn.com/48x36/ar.png'); }
+.currency-option[data-currency="USD"]::before { background-image: url('https://flagcdn.com/48x36/us.png'); }
+.currency-option[data-currency="BRL"]::before { background-image: url('https://flagcdn.com/48x36/br.png'); }
+.currency-option[data-currency="EUR"]::before { background-image: url('https://flagcdn.com/48x36/eu.png'); }
+
+.currency-option:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.currency-option:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+/* ==========================================================================
+   25. CARGA DE LOGO DE MARCA
+   ========================================================================== */
+.new-brand-logo-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.logo-upload-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.brand-logo-drop-zone {
+    border: 2px dashed var(--primary-color-2);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-logo-drop-zone:hover,
+.brand-logo-drop-zone.drag-over {
+    background-color: rgba(3, 169, 244, 0.1);
+    border-color: var(--primary-color-1);
+}
+
+.brand-logo-drop-zone svg {
+    width: 40px;
+    height: 40px;
+    color: var(--primary-color-2);
+}
+
+.brand-logo-preview-container {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 150px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+}
+
+#brand-logo-preview {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+/* ==========================================================================
+   MAIN.CSS - Estilos Específicos de Página y Media Queries
+   ========================================================================== */
+
+/* ==========================================================================
+   ESTILOS ESPECÍFICOS DE PÁGINA
+   ========================================================================== */
+.about-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem;
+}
+
+.about-content {
+    max-width: 800px;
+    text-align: center;
+}
+
+.about-content h2 {
+    font-family: var(--subtitle-font);
+    font-size: 2.8rem;
+    font-style: italic;
+    color: var(--primary-color-1);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.about-content h3 {
+    font-family: var(--font-family);
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.about-content p {
+    font-family: var(--font-family);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.about-content strong {
+    color: var(--primary-color-2);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES PARA RESPONSIVIDAD (Mobile-First)
+   ========================================================================== */
+@media (max-width: 768px) {
+    header.main-header {
+        flex-direction: column;
+        height: auto;
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+    
+    header.main-header h1 { 
+        font-size: 2.2rem; 
+    }
+    
+    .header-subtitle { 
+        font-size: 1rem; 
+    }
+    
+    #header-logo { 
+        width: 120px; 
+        height: 120px; 
+    }
+
+    .hero-banner-text p { 
+        font-size: 1.1rem; 
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        height: auto;
+        gap: 2rem;
+    }
+    
+    .contact-placeholder, .map-container {
+        width: 100%;
+        max-width: none;
+    }
+
+    .map-container {
+        min-height: 250px;
+    }
+
+    .nav-wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .nav-wrapper > * {
+        flex-basis: calc(50% - 1rem);
+        text-align: center;
+    }
+    
+    .dropdown-content {
+        width: 95vw;
+        left: 50%;
+        top: calc(100% + 0.5rem);
+    }
+
+    .brand-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+}
+
+/* ==========================================================================
+   RESET.CSS - Reseteo de Estilos Navegador (Moderno y Seguro)
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root {
+    /* Colores principales */
+    --bg-color: #f5f0f5;
+    --surface-color: #ffffff;
+    --primary-color-1: #e91e63;
+    --primary-color-2: #03a9f4;
+    --accent-color: #ffc107;
+    
+    /* Colores de texto */
+    --text-color: #333333;
+    --text-muted: #777777;
+    
+    /* Otros elementos visuales */
+    --border-color: #eeeeee;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    
+    /* Fuentes */
+    --font-family: 'Montserrat', sans-serif;
+    --heading-font: 'Poppins', sans-serif;
+    --subtitle-font: 'Playfair Display', serif;
+    
+    /* Efectos especiales */
+    --neon-pink: #ff10f0;
+    --neon-cyan: #00ffff;
+    
+    /* Transiciones y animaciones */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* --- PALETA DE COLORES REFINADA (Opcional) --- */
+    --header-bg-color: rgba(0, 0, 0, 0.75);
+    --header-text-color: #f0f0f0;
+    --header-subtitle-color: #e0e0e0;
+    --header-logo-border: #f0f0f0;
+    --header-logo-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   26. BOTÓN "GUARDAR MARCA" (Estilo Outline)
+   ========================================================================== */
+.btn-outline-brand {
+    background-color: transparent;
+    color: var(--primary-color-2);
+    border: 2px solid var(--primary-color-2);
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.btn-outline-brand:hover:not(:disabled) {
+    background-color: var(--primary-color-2);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(3, 169, 244, 0.2);
+}
+
+.btn-outline-brand:disabled {
+    background-color: transparent;
+    color: #cccccc;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   27. PROBADOR VIRTUAL ULTRA-REALISTA
+   ========================================================================== */
+.probador-main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+    flex-grow: 1;
+    background-color: var(--bg-color);
+}
+
+.probador-container {
+    width: 100%;
+    max-width: 1200px;
+    background-color: var(--surface-color);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    border-top: 5px solid var(--primary-color-1);
+}
+
+.probador-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.probador-header h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-size: 2.2rem;
+}
+
+.probador-header p {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.probador-content {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.probador-column {
+    flex: 1;
+}
+
+.probador-step h2 {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.probador-drop-zone {
+    border: 2px dashed var(--primary-color-2);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-height: 300px;
+}
+
+.probador-drop-zone.drag-over {
+    background-color: rgba(3, 169, 244, 0.1);
+    border-color: var(--primary-color-1);
+    transform: scale(1.02);
+}
+
+.drop-zone-hint {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- Selector de Productos --- */
+.product-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.product-card-selector {
+    background-color: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+}
+
+.product-card-selector:hover {
+    border-color: var(--primary-color-2);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.product-card-selector.selected {
+    border-color: var(--primary-color-1);
+    background-color: rgba(233, 30, 99, 0.1);
+}
+
+.product-card-selector img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.product-card-selector p {
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* --- Sección de Resultado --- */
+.probador-result-section {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.probador-result-section h2 {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-color);
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+}
+
+.result-image-container {
+    position: relative;
+    margin: 0 auto;
+    max-width: 600px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+#result-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.result-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loader-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary-color-1);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.result-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* --- Buscador dentro del Probador Virtual --- */
+.probador-search-container {
+    margin-bottom: 1.5rem;
+}
+
+.probador-search-input {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px; /* Redondeado para que coincida con otros inputs */
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: #fdfdfd;
+    transition: border-color var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.probador-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color-1);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+/* ==========================================================================
+   28. BOTÓN DE GENERACIÓN Y EFECTO DE ESTRELLAS
+   ========================================================================== */
+.btn-generate {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1.2rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, var(--primary-color-1), var(--primary-color-2));
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-medium);
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.btn-generate:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+}
+
+.btn-generate:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Contenedor para la explosión de estrellas --- */
+.btn-generate .starburst-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* --- Estrella individual --- */
+.star {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    animation: starburst-animation 0.8s ease-out forwards;
+}
+
+@keyframes starburst-animation {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* ==========================================================================
+   27. PROBADOR VIRTUAL ULTRA-REALISTA (Continuación...)
+   ========================================================================== */
+
+/* ==========================================================================
+   28. MODAL DE RESULTADO (GRANDE Y CENTRADO - CORREGIDO)
+   ========================================================================== */
+.result-modal-overlay {
+    /* Heredamos estilos de .modal-overlay pero controlamos la visibilidad con display */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    padding: 1rem;
+    
+    /* --- ESTADO INICIAL: Oculto --- */
+    display: none; /* <-- CLAVE: Usamos display para ocultar */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* --- ESTADO ACTIVO: Visible --- */
+.result-modal-overlay.show {
+    display: flex; /* <-- CLAVE: Usamos flex para mostrar */
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    visibility: visible;
+}
+
+.result-modal-content {
+    background: #fff;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    transform: scale(0.9);
+    transition: transform 0.4s ease;
+}
+
+.result-modal-overlay.show .result-modal-content {
+    transform: scale(1);
+}
+
+.result-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+#result-image {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.result-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+/* --- Asegurar que el botón de cerrar del modal esté siempre visible --- */
+.result-modal-content .modal-close-btn {
+    z-index: 10; /* Lo pone por encima de la imagen y el loader */
 }
